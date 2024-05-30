@@ -13,7 +13,12 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Roboto_Thin: require('../assets/fonts/Roboto-Thin.ttf'),
+    Roboto_Light: require('../assets/fonts/Roboto-Light.ttf'),
+    Roboto_Regular: require('../assets/fonts/Roboto-Regular.ttf'),
+    Roboto_Medium: require('../assets/fonts/Roboto-Medium.ttf'),
+    Roboto_Bold: require('../assets/fonts/Roboto-Bold.ttf'),
+    Roboto_Black: require('../assets/fonts/Roboto-Black.ttf'),
   });
 
   useEffect(() => {
@@ -30,7 +35,6 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
   );
