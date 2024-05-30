@@ -1,8 +1,9 @@
+import { Link } from 'expo-router';
 import { Image, StyleSheet, Platform, View, Text } from 'react-native';
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text>Hello Worl</Text>
+      <Link href="/login">Hello World</Link>
     </View>
   );
 }
