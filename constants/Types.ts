@@ -7,3 +7,14 @@ export type DonationList = {
   address: string;
   img: string;
 };
+
+export type DonationTransactinList = {
+  transactionId: number;
+  collectedAmount: number;
+  collectedDate: string;
+  collectedTime: string;
+  custodianName: string;
+  custodianImg: string;
+  district: string;
+  address: string;
+};

@@ -1,10 +1,12 @@
 import LayoutContainer from '@/components/container/LayoutContainer';
 import { View, FlatList } from 'react-native';
-import data from "@/assets/json/donationListData.json"
-import ListItemCard from '@/components/dashboard/ListItemCard';
+import data from "@/assets/json/donationTransactionList.json"
 import Input from '@/components/ui/Input';
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
+import ListItemCard from '@/components/dashboard/ListItemCard';
+import ListHeader from '@/components/dashboard/ListHeader';
+import ListFooter from '@/components/dashboard/ListFooter';
 
 export default function HomeScreen() {
   const [search, setSearch] = useState('');
@@ -14,7 +16,7 @@ export default function HomeScreen() {
     setSearch(text);
     if (text) {
       const newData = data.filter((item) => {
-        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const itemData = item.custodianName ? item.custodianName.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -36,10 +38,16 @@ export default function HomeScreen() {
       </View>
       <FlatList
         data={filteredData}
-        keyExtractor={(item, index) => item.id.toString()}
+        keyExtractor={(item, index) => item.transactionId.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <ListItemCard {...item} />}
+        ListHeaderComponent={<ListHeader />}
+        ListFooterComponent={<ListFooter />}
+        style={{
+          marginBottom:50
+        }}
       />
+
     </LayoutContainer>
   );
 }
