@@ -2207,6 +2207,11 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.12.tgz#12bb1e2be27293c1406acb6af1c3f3a1481d98c6"
   integrity sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==
 
+"@types/react-native-html-to-pdf@^0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@types/react-native-html-to-pdf/-/react-native-html-to-pdf-0.8.3.tgz#0e41b666c711b114957e42f7a7c665fb2fea8045"
+  integrity sha512-KjyR1F9KhcmX8p9y/8WYMiaK4DV/cYBUO1XHEzD9dDVZBkY9ujbdMLYO7ZvmAffNT2Q484Qvg+t6szgVcnN22g==
+
 "@types/react-test-renderer@^18.0.7":
   version "18.3.0"
   resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-18.3.0.tgz#839502eae70058a4ae161f63385a8e7929cef4c0"
@@ -3938,6 +3943,11 @@ expo-modules-core@1.12.12:
   dependencies:
     invariant "^2.2.4"
 
+expo-print@^13.0.1:
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/expo-print/-/expo-print-13.0.1.tgz#2fe419593aa812642f4ad7057928d2e712578e97"
+  integrity sha512-o8LuCguGrkyC5RaWEfL5N2J0V9mfbZ3GVzLpaf3KU5RrdYzGEjoiv4xlhVVzh/++hMUqOgnIrtF7tzWYhwu/7g==
+
 expo-router@~3.5.14:
   version "3.5.14"
   resolved "https://registry.yarnpkg.com/expo-router/-/expo-router-3.5.14.tgz#5ca0e861271fa716b94a6149d696f7ac1258aad4"
@@ -3957,6 +3967,11 @@ expo-secure-store@^13.0.1:
   version "13.0.1"
   resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-13.0.1.tgz#fc886d3e0ed12890c8dd74e7cc44e35b03f2d79b"
   integrity sha512-5DTKjbv98X7yPbm+1jER/sOEIlt2Ih7qwabTvkWDXry5bPcQGoulxH5zIX9+JvVH7of8GI4t7NSEbpAO3P7FZA==
+
+expo-sharing@^12.0.1:
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-12.0.1.tgz#6c4d951beda47dac47112e679d60fc06c233b7aa"
+  integrity sha512-wBT+WeXwapj/9NWuLJO01vi9bdlchYu/Q/xD8slL/Ls4vVYku8CPqzkTtDFcjLrjtlJqyeHsdQXwKLvORmBIew==
 
 expo-splash-screen@0.27.4, expo-splash-screen@~0.27.4:
   version "0.27.4"

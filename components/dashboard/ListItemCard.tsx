@@ -7,7 +7,10 @@ import { AntDesign, Entypo, Feather, FontAwesome6, MaterialCommunityIcons } from
 import { Link } from 'expo-router';
 import { DonationList, DonationTransactinList } from '@/constants/Types';
 
-type Props = DonationTransactinList & {}
+type Props = DonationTransactinList & {
+    handlePdfPrint: () => void;
+    handlePdfShare: () => void;
+}
 
 const ListItemCard: React.FC<Props> = ({
     transactionId,
@@ -17,7 +20,9 @@ const ListItemCard: React.FC<Props> = ({
     custodianName,
     custodianImg,
     district,
-    address
+    address,
+    handlePdfPrint,
+    handlePdfShare
 }) => {
     return (
         <Pressable
@@ -106,7 +111,7 @@ const ListItemCard: React.FC<Props> = ({
 
                     <View className='flex flex-row justify-end'>
                         <Pressable
-                            onPress={() => { }}
+                            onPress={handlePdfPrint}
                             style={({ pressed }) => [
                                 {
                                     padding: 8,
@@ -121,7 +126,7 @@ const ListItemCard: React.FC<Props> = ({
                         </Pressable>
 
                         <Pressable
-                            onPress={() => { }}
+                            onPress={handlePdfShare}
                             style={({ pressed }) => [
                                 {
                                     padding: 8,
@@ -138,6 +143,8 @@ const ListItemCard: React.FC<Props> = ({
                 </View>
             </View>
         </Pressable>
+
+
     )
 }
 
