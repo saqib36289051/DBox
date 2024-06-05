@@ -7,6 +7,9 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import HomeIcon from '@/components/navigation/Home';
 import DonationBoxIcon from '@/components/navigation/DonationBox';
 import DashboardIcon from '@/components/navigation/Dashboard';
+import { MaterialIcons } from '@expo/vector-icons';
+import { View } from 'react-native';
+import ScanIcon from '@/components/navigation/ScanIcon';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -37,6 +40,26 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="scan"
+        options={{
+          tabBarLabelStyle: {
+            display: 'none'
+          },
+          tabBarIcon: ({ color, focused }) => (
+            <View className="w-[75] h-[75] bg-white flex items-center justify-center rounded-full -mt-7 shadow">
+              <View className="w-[60] h-[60] bg-cyan-700 flex items-center justify-center rounded-full">
+                <ScanIcon
+                  width={48}
+                  height={48}
+                  fill={"#fff"}
+                />
+              </View>
+            </View>
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="donationBox"
         options={{

@@ -49,6 +49,7 @@ const ListItemCard: React.FC<Props> = ({
                         </View>
                 }
             </View>
+
             <View className='flex-1'>
                 <Label
                     type="p"
@@ -56,7 +57,8 @@ const ListItemCard: React.FC<Props> = ({
                 >
                     {custodianName}
                 </Label>
-                <View className='flex mt-2 space-y-1'>
+                <View className='flex w-[50%] h-[1] bg-slate-400 mt-1'></View>
+                <View className='flex mt-1 space-y-1'>
 
                     <View className="flex-row space-x-2 items-center">
                         <MaterialCommunityIcons name="currency-rupee" size={14} color="#0891b2" />

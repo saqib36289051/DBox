@@ -1,6 +1,6 @@
 import React from 'react';
 import LayoutContainer from '@/components/container/LayoutContainer';
-import { View, FlatList, Modal, Platform, StyleSheet, Text } from 'react-native';
+import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme } from 'react-native';
 import data from "@/assets/json/donationTransactionList.json"
 import Input from '@/components/ui/Input';
 import { Feather } from '@expo/vector-icons';
@@ -12,6 +12,9 @@ import ListFooter from '@/components/dashboard/ListFooter';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import Button from '@/components/ui/Button';
+import TransactionIcon from '@/components/navigation/TransactionIcon';
+import { useRouter } from 'expo-router';
+import { Colors } from '@/constants/Colors';
 
 const html = `
 <html>
@@ -32,9 +35,12 @@ const html = `
 export default function HomeScreen() {
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState(data);
-  const [selectedPrinter, setSelectedPrinter] = React.useState();
+  const router = useRouter()
+  const colorScheme = useColorScheme()
 
-  
+  // const [selectedPrinter, setSelectedPrinter] = React.useState();
+
+
   const handlePdfView = async () => {
     const { uri } = await Print.printToFileAsync({ html });
     await Sharing.shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
@@ -70,13 +76,16 @@ export default function HomeScreen() {
 
   return (
     <LayoutContainer>
-      <View className='py-1'>
-        <Input
-          icon={<Feather name="search" size={24} color="#0891b2" />}
-          placeholder='Search for donation list'
-          onChangeText={onFilterList}
-          value={search}
-        />
+      <View className='py-1 flex-row gap-2'>
+        <View className='flex-1'>
+          <Input
+            icon={<Feather name="search" size={24} color={Colors[colorScheme ?? 'light'].icon} />}
+            placeholder='Search for transaction'
+            onChangeText={onFilterList}
+            value={search}
+          />
+        </View>
+        <Button className='bg-cyan-700 py-1 px-2' iconBtn={<TransactionIcon width={38} height={38} />} onPress={() => router.navigate("/form/addTransaction")} />
       </View>
       {/* <Button title="Print" onPress={print} /> */}
       {/* <View style={styles.spacer} />

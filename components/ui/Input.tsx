@@ -14,7 +14,7 @@ const Input: React.FC<InputProps> = ({ onChangeText, value, ...props }) => {
       {props?.label && props?.label}
 
       {props?.icon ? (
-        <View className="flex-row items-center border border-gray-400 text-gray-600 focus:border-cyan-600 focus:text-gray-600 rounded-md px-2 py-2 text-base">
+        <View className="flex-row items-center border border-gray-400 text-gray-600 focus:border-cyan-700 focus:text-gray-600 rounded-md px-2 py-2 text-base">
           {props?.icon}
           <TextInput
             value={value}
@@ -29,7 +29,7 @@ const Input: React.FC<InputProps> = ({ onChangeText, value, ...props }) => {
           value={value}
           onChangeText={onChangeText}
           placeholder={props?.placeholder}
-          className={` font-regular border border-gray-400 text-gray-600 focus:border-cyan-600 focus:text-gray-600 rounded-md px-2 py-2 text-base ${props?.className}`}
+          className={` font-regular border border-gray-400 text-gray-600 focus:border-cyan-700 focus:text-gray-600 rounded-md px-2 py-2 text-base ${props?.className}`}
           {...props}
         />
       )
