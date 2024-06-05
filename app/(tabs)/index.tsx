@@ -87,18 +87,6 @@ export default function HomeScreen() {
         </View>
         <Button className='bg-cyan-700 py-1 px-2' iconBtn={<TransactionIcon width={38} height={38} />} onPress={() => router.navigate("/form/addTransaction")} />
       </View>
-      {/* <Button title="Print" onPress={print} /> */}
-      {/* <View style={styles.spacer} />
-      {Platform.OS === 'ios' && (
-        <>
-          <View style={styles.spacer} />
-          {/* <Button title="Select printer" onPress={selectPrinter} /> }
-          <View style={styles.spacer} />
-          {selectedPrinter ? (
-            <Text style={styles.printer}>{`Selected printer: ${selectedPrinter.name}`}</Text>
-          ) : undefined}
-        </>
-      )} */}
       <FlatList
         data={filteredData}
         keyExtractor={(item, index) => item.transactionId.toString()}
@@ -110,8 +98,6 @@ export default function HomeScreen() {
           marginBottom: 50
         }}
       />
-
-
 
     </LayoutContainer>
   );

@@ -27,7 +27,7 @@ let heading = {
   h3: 'text-4xl text-cyan-700',
   h4: 'text-3xl text-cyan-700',
   h5: 'text-2xl text-cyan-700',
-  h7: 'text-xl text-cyan-700',
+  h6: 'text-xl text-cyan-700',
   p: 'text-base text-cyan-700',
   sm: 'text-sm text-cyan-700',
   xs: 'text-xs text-cyan-700',
