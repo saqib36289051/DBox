@@ -1,117 +1,81 @@
-import { StyleSheet, Text, useColorScheme, View } from 'react-native'
-import React, { useState } from 'react'
-import LayoutContainer from '@/components/container/LayoutContainer'
-import Input from '@/components/ui/Input'
-import { Feather, SimpleLineIcons } from '@expo/vector-icons'
-import Label from '@/components/ui/Label'
-import { Colors } from '@/constants/Colors'
-import DropDown from '@/components/ui/DropDown'
+import React, { useState, useEffect } from 'react';
+import { Button, SafeAreaView, StyleSheet, Text, TextInput, View, useColorScheme, Alert } from 'react-native';
+import ThermalPrinterModule from 'react-native-thermal-printer';
+import { Colors } from '@/constants/Colors';
 
+ThermalPrinterModule.defaultConfig = {
+    ...ThermalPrinterModule.defaultConfig,
+    ip: '192.168.100.246',
+    port: 9100,
+    timeout: 30000,
+};
 
-type Props = {}
-const data = [
-    { label: 'Punjab', value: '1' },
-    { label: 'Sindh', value: '2' },
-    { label: 'KPK', value: '3' },
-    { label: 'Balochistan', value: '4' },
-    { label: 'Kashmir', value: '5' },
-    { label: 'GB', value: '6' },
-
-];
-
-const AddTransaction = (props: Props) => {
+const AddTransaction = (props) => {
     const colorScheme = useColorScheme();
+    const [text, setText] = useState(
+        '[C]=============\n' +
+        '[L]\n' +
+        '[L]<b>BEAUTIFUL\n' +
+        '[L]  + Size : S'
+    );
+
+    const backgroundStyle = {
+        backgroundColor: "#cc6789",
+    };
+
+    const scanBluetoothDevices = async () => {
+        try {
+            const devices = await ThermalPrinterModule.getBluetoothDeviceList();
+            console.log('Bluetooth devices:', devices);
+            return devices;
+        } catch (err) {
+            console.error('Error scanning Bluetooth devices:', err.message);
+            return [];
+        }
+    };
+
+    const print = async () => {
+        const devices = await scanBluetoothDevices();
+        if (devices.length === 0) {
+            Alert.alert('No Bluetooth devices found');
+            return;
+        }
+
+        const printer = devices.find(device => device.deviceName === 'InnerPrinter'); // Adjust this to your printer's name
+
+        if (!printer) {
+            Alert.alert('Bluetooth Printer not found');
+            return;
+        }
+
+        try {
+            // await ThermalPrinterModule.printTcp({ payload: text });
+            await ThermalPrinterModule.printBluetooth({
+                payload: text,
+                macAddress: printer.macAddress,
+                printerNbrCharactersPerLine: 48,
+            });
+            console.log('done printing');
+        } catch (err) {
+            console.error('Error printing:', err.message);
+        }
+    };
+
     return (
-        <LayoutContainer>
-            <View className=" gap-y-2">
-                <View className='h-20 justify-center'>
-                    <Label type='h6' weight='medium'>Fill out the form value to collect the donation from the custodian.</Label>
-                </View>
-                <View>
-                    <Input
-                        label={<Label weight='medium' className='mb-1 text-cyan-700'>Mobile Number</Label>}
-                        onChangeText={(e) => { }}
-                        value=''
-                        keyboardType='phone-pad'
-                        placeholder='+920000000000'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label weight='medium' className='mb-1 text-cyan-700'>Name</Label>}
-                        onChangeText={(e) => { }}
-                        value=''
-                        placeholder='Enter Custodian Name'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label weight='medium' className='mb-1 text-cyan-700'>State / Province</Label>}
-                        onChangeText={(e) => { }}
-                        value=''
-                        placeholder='State / Province'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label weight='medium' className='mb-1 text-cyan-700'>City</Label>}
-                        onChangeText={(e) => { }}
-                        value=''
-                        placeholder='City'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label weight='medium' className='mb-1 text-cyan-700'>Area</Label>}
-                        onChangeText={(e) => { }}
-                        value=''
-                        placeholder='Area'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label weight='medium' className='mb-1 text-cyan-700'>Complete Address</Label>}
-                        onChangeText={(e) => { }}
-                        value=''
-                        placeholder='Complete Address'
-                        multiline={true}
-                        numberOfLines={2}
-                        className='h-18'
-                        textAlignVertical='top'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label weight='medium' className='mb-1 text-cyan-700'>Gender</Label>}
-                        onChangeText={(e) => { }}
-                        value=''
-                        placeholder='Gender'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label weight='medium' className='mb-1 text-cyan-700'>Date</Label>}
-                        onChangeText={(e) => { }}
-                        value=''
-                        placeholder='Date'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
+        <SafeAreaView style={backgroundStyle}>
+            <TextInput
+                value={text}
+                onChangeText={setText}
+            />
+            <Button
+                title="Click to invoke your native module!"
+                color="#841584"
+                onPress={print}
+            />
+        </SafeAreaView>
+    );
+};
 
-                <DropDown data={data} />
+export default AddTransaction;
 
-            </View>
-        </LayoutContainer>
-    )
-}
-
-export default AddTransaction
-
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

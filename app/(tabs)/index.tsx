@@ -38,25 +38,10 @@ export default function HomeScreen() {
   const router = useRouter()
   const colorScheme = useColorScheme()
 
-  // const [selectedPrinter, setSelectedPrinter] = React.useState();
-
-
   const handlePdfView = async () => {
     const { uri } = await Print.printToFileAsync({ html });
     await Sharing.shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
   };
-
-  // const print = async () => {
-  //   // On iOS/android prints the given html. On web prints the HTML from the current page.
-  //   await Print.printAsync({
-  //     html,
-  //     printerUrl: selectedPrinter?.url, // iOS only
-  //   });
-  // };
-  // const selectPrinter = async () => {
-  //   const printer = await Print.selectPrinterAsync(); // iOS only
-  //   setSelectedPrinter(printer);
-  // };
 
 
 

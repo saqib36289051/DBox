@@ -10,6 +10,7 @@ import DashboardIcon from '@/components/navigation/Dashboard';
 import { MaterialIcons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import ScanIcon from '@/components/navigation/ScanIcon';
+import Setting from '@/components/navigation/Setting';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -40,6 +41,23 @@ export default function TabLayout() {
           ),
         }}
       />
+
+
+      <Tabs.Screen
+        name="donationBox"
+        options={{
+          title: 'Donation Box',
+          tabBarIcon: ({ color, focused }) => (
+            <DonationBoxIcon
+              width={42}
+              height={42}
+              strokeWidth={1}
+              stroke={focused ? Colors[colorScheme ?? 'light'].tint : color}
+              fill={focused ? Colors[colorScheme ?? 'light'].tint : color}
+            />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="scan"
         options={{
@@ -47,7 +65,7 @@ export default function TabLayout() {
             display: 'none'
           },
           tabBarIcon: ({ color, focused }) => (
-            <View className="w-[75] h-[75] bg-white flex items-center justify-center rounded-full -mt-7 shadow">
+            <View className="w-[75] h-[75] bg-white flex items-center justify-center rounded-full -mt-7">
               <View className="w-[60] h-[60] bg-cyan-700 flex items-center justify-center rounded-full">
                 <ScanIcon
                   width={48}
@@ -61,14 +79,14 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="donationBox"
+        name="setting"
         options={{
-          title: 'Donation Box',
+          title: 'Settings',
           tabBarIcon: ({ color, focused }) => (
-            <DonationBoxIcon
-              width={32}
-              height={32}
-              strokeWidth={8}
+            <Setting
+              width={42}
+              height={42}
+              strokeWidth={1}
               stroke={focused ? Colors[colorScheme ?? 'light'].tint : color}
               fill={focused ? Colors[colorScheme ?? 'light'].tint : color}
             />
