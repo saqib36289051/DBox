@@ -7,7 +7,7 @@ type Props = {}
 const DonationListFooter = (props: Props) => {
   return (
     <View className='flex items-center justify-center my-1'>
-      <Label type='p' weight='medium' className='text-cyan-700'>No more Item</Label>
+      <Label type='p' weight='medium' className='text-green-700'>No more Item</Label>
     </View>
   )
 }

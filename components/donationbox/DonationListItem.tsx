@@ -36,7 +36,7 @@ const DonationListItem: React.FC<Props> = ({
                             className="rounded-full w-12 h-12 object-cover shadow"
                             source={{ uri: img }} />
                         :
-                        <View className="bg-cyan-700 w-12 h-12 rounded-full flex items-center justify-center">
+                        <View className="bg-green-700 w-12 h-12 rounded-full flex items-center justify-center">
                             <Label type='p' weight='bold' className='text-white'>{getFirstLetters(name)}</Label>
                         </View>
                 }

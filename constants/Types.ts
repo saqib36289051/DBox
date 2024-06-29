@@ -18,3 +18,9 @@ export type DonationTransactinList = {
   district: string;
   address: string;
 };
+
+export type GenderListType = {
+  id: number;
+  text: string;
+  isChecked: boolean;
+};

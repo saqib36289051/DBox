@@ -66,7 +66,7 @@ export default function TabLayout() {
           },
           tabBarIcon: ({ color, focused }) => (
             <View className="w-[75] h-[75] bg-white flex items-center justify-center rounded-full -mt-7">
-              <View className="w-[60] h-[60] bg-cyan-700 flex items-center justify-center rounded-full">
+              <View className="w-[60] h-[60] bg-green-700 flex items-center justify-center rounded-full">
                 <ScanIcon
                   width={48}
                   height={48}

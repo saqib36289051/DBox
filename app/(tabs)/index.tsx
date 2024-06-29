@@ -70,7 +70,7 @@ export default function HomeScreen() {
             value={search}
           />
         </View>
-        <Button className='bg-cyan-700 py-1 px-2' iconBtn={<TransactionIcon width={38} height={38} />} onPress={() => router.navigate("/form/addTransaction")} />
+        <Button className='bg-green-700 py-1 px-2' iconBtn={<TransactionIcon width={38} height={38} />} onPress={() => router.navigate("/form/addTransaction")} />
       </View>
       <FlatList
         data={filteredData}

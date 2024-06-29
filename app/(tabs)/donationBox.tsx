@@ -42,7 +42,7 @@ export default function DonationBox() {
             value={search}
           />
         </View>
-        <Button className='bg-cyan-700 py-1 px-4' iconBtn={<MaterialIcons name="add" size={24} color="white" />} onPress={() => router.navigate("/form/addBox")} />
+        <Button className='bg-green-700 py-1 px-4' iconBtn={<MaterialIcons name="add" size={24} color="white" />} onPress={() => router.navigate("/form/addBox")} />
       </View>
       <FlatList
         data={filteredData}

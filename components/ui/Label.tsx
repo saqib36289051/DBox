@@ -22,15 +22,15 @@ const Label = ({ className, type, weight, children, ...OtherProps }: Props) => {
 };
 
 let heading = {
-  h1: 'text-6xl text-cyan-700',
-  h2: 'text-5xl text-cyan-700',
-  h3: 'text-4xl text-cyan-700',
-  h4: 'text-3xl text-cyan-700',
-  h5: 'text-2xl text-cyan-700',
-  h6: 'text-xl text-cyan-700',
-  p: 'text-base text-cyan-700',
-  sm: 'text-sm text-cyan-700',
-  xs: 'text-xs text-cyan-700',
+  h1: 'text-6xl text-green-700',
+  h2: 'text-5xl text-green-700',
+  h3: 'text-4xl text-green-700',
+  h4: 'text-3xl text-green-700',
+  h5: 'text-2xl text-green-700',
+  h6: 'text-xl text-green-700',
+  p: 'text-base text-green-700',
+  sm: 'text-sm text-green-700',
+  xs: 'text-xs text-green-700',
 };
 
 let weightStyles = {
@@ -42,7 +42,7 @@ let weightStyles = {
   bold: 'font-bold',
 };
 
-const implementType = (type: string = 'P', weight: string = 'regular') => {
+const implementType = (type: string = 'p', weight: string = 'regular') => {
   const textStyle = heading[type as keyof typeof heading]
   const weightStyle = weightStyles[weight as keyof typeof weightStyles]
   return `${textStyle} ${weightStyle}`;

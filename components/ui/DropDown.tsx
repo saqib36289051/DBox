@@ -7,7 +7,9 @@ type Props = {
     data: {
         label: string;
         value: string;
-    }[]
+    }[],
+    position?: 'top' | 'bottom';
+    onChangeValue: (value: string) => void;
 };
 
 type DropDownItem = {
@@ -34,6 +36,11 @@ const DropDown = (props: Props) => {
         );
     };
 
+    const onChangeValue = (item: DropDownItem) => {
+        setValue(item.value);
+        props?.onChangeValue(item?.value);
+    }
+
     return (
         <Dropdown
             style={styles.dropdown}
@@ -42,6 +49,7 @@ const DropDown = (props: Props) => {
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
             data={props?.data}
+            dropdownPosition={props?.position || 'top'}
             search
             maxHeight={300}
             labelField="label"
@@ -49,9 +57,7 @@ const DropDown = (props: Props) => {
             placeholder="Select item"
             searchPlaceholder="Search..."
             value={value}
-            onChange={item => {
-                setValue(item.value);
-            }}
+            onChange={onChangeValue}
             renderLeftIcon={() => (
                 <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
             )}
@@ -65,18 +71,11 @@ export default DropDown;
 const styles = StyleSheet.create({
     dropdown: {
         height: 50,
-        backgroundColor: 'white',
+        backgroundColor: 'transparent',
         borderRadius: 12,
         padding: 12,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 1.41,
-
-        elevation: 2,
+        borderWidth: 1,
+        borderColor: 'lightgray',
     },
     icon: {
         marginRight: 5,
