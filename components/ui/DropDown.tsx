@@ -54,7 +54,7 @@ const DropDown = (props: Props) => {
             maxHeight={300}
             labelField="label"
             valueField="value"
-            placeholder="Select item"
+            placeholder="Select Donation Type"
             searchPlaceholder="Search..."
             value={value}
             onChange={onChangeValue}

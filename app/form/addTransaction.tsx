@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { StyleSheet, View, useColorScheme, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, useColorScheme, Alert, ScrollView, ToastAndroid } from 'react-native';
 import ThermalPrinterModule from 'react-native-thermal-printer';
 import { Colors } from '@/constants/Colors';
 import LayoutContainer from '@/components/container/LayoutContainer';
@@ -10,6 +10,8 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import CheckboxGroup from '@/components/ui/CheckboxGroup';
 import { GenderListType } from '@/constants/Types';
 import DropDown from '@/components/ui/DropDown';
+import { useTransactionMutation } from '@/store/services/transactionApi';
+import { useRouter } from 'expo-router';
 
 ThermalPrinterModule.defaultConfig = {
     ...ThermalPrinterModule.defaultConfig,
@@ -19,34 +21,34 @@ ThermalPrinterModule.defaultConfig = {
 };
 
 type State = {
-    mobile: string;
+    mobile_number: string;
     name: string;
-    state: string;
+    province: string;
     city: string;
     area: string;
-    address: string;
-    donationType: string;
+    complete_address: string;
+    donation_type: string;
     amount: string;
     gender: GenderListType[];
-    date: string;
 }
 
 type Action = Partial<State>;
 
 const AddTransaction = () => {
     const colorScheme = useColorScheme();
+    const router = useRouter()
+    const [transaction, { isLoading, isError, error }] = useTransactionMutation()
     const [state, dispatch] = useReducer((state: State, action: Action) => {
         return { ...state, ...action }
     }, {
-        mobile: '',
+        mobile_number: '',
         name: '',
-        state: '',
+        province: '',
         city: '',
         area: '',
-        address: '',
-        donationType: "",
+        complete_address: '',
+        donation_type: "",
         amount: "",
-        date: "",
         gender: [{
             id: 1,
             text: "Male",
@@ -63,7 +65,7 @@ const AddTransaction = () => {
         '[L]JAMIA NIZAME MUSTAFA\n' +
         '[L]--------------------\n' +
         `[L]NAME: ${state.name}\n` +
-        `[L]MOBILE: ${state.mobile}\n` +
+        `[L]MOBILE: ${state.mobile_number}\n` +
         `[L]Donation: ${state.amount}\n` +
         '[L]WE ARE VERY THANKFUL FOR YOUR DONATION AND IT WILL USE FOR THE CHILDRENS TO PROVIDE FREE FOOD AND EDUCATION JAZAK ALLAH'
 
@@ -79,29 +81,39 @@ const AddTransaction = () => {
     };
 
     const print = async () => {
-        const devices = await scanBluetoothDevices();
-        if (devices.length === 0) {
-            Alert.alert('No Bluetooth devices found');
-            return;
-        }
+        // const devices = await scanBluetoothDevices();
+        // if (devices.length === 0) {
+        //     Alert.alert('No Bluetooth devices found');
+        //     return;
+        // }
 
-        const printer = devices.find(device => device.deviceName === 'InnerPrinter'); // Adjust this to your printer's name
+        // const printer = devices.find(device => device.deviceName === 'InnerPrinter'); // Adjust this to your printer's name
 
-        if (!printer) {
-            Alert.alert('Bluetooth Printer not found');
-            return;
-        }
+        // if (!printer) {
+        //     Alert.alert('Bluetooth Printer not found');
+        //     return;
+        // }
 
         try {
-            // await ThermalPrinterModule.printTcp({ payload: text });
-            await ThermalPrinterModule.printBluetooth({
-                payload: text,
-                macAddress: printer.macAddress,
-                printerNbrCharactersPerLine: 32,
-            });
-            console.log('done printing');
+            const res = await transaction({
+                ...state,
+                gender: state.gender.find(g => g.isChecked === true)?.text
+            })
+            if (res?.error) {
+                Object.entries(res?.error?.data)?.map(([key, value]) => {
+                    ToastAndroid.show(`${value}`, ToastAndroid.SHORT)
+                })
+                return
+            }
+            router.back()
+            // await ThermalPrinterModule.printBluetooth({
+            //     payload: text,
+            //     macAddress: printer.macAddress,
+            //     printerNbrCharactersPerLine: 32,
+            // });
+            // console.log('done printing');
         } catch (err) {
-            console.error('Error printing:', err.message);
+            console.error('Error printing:', err);
         }
     };
 
@@ -114,10 +126,17 @@ const AddTransaction = () => {
                     <Label weight='medium'>Fill out the form value to collect the donation from the custodian.</Label>
                 </View>
                 <View>
+                    <Label type='sm' weight='regular' className='mb-2 text-gray-600'>Donation Type</Label>
+                    <DropDown
+                        data={[{ label: 'Box', value: '1' }, { label: 'Sadqa', value: '2' }, { label: 'Zakat', value: '3' }]}
+                        onChangeValue={(value) => dispatch({ donation_type: value })}
+                    />
+                </View>
+                <View>
                     <Input
                         label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Mobile Number</Label>}
-                        onChangeText={(e) => dispatch({ mobile: e })}
-                        value={state.mobile}
+                        onChangeText={(e) => dispatch({ mobile_number: e })}
+                        value={state.mobile_number}
                         keyboardType='phone-pad'
                         placeholder='+920000000000'
                         placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
@@ -135,8 +154,8 @@ const AddTransaction = () => {
                 <View>
                     <Input
                         label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>State / Province</Label>}
-                        onChangeText={(e) => dispatch({ state: e })}
-                        value={state.state}
+                        onChangeText={(e) => dispatch({ province: e })}
+                        value={state.province}
                         placeholder='State / Province'
                         placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
                     />
@@ -162,8 +181,8 @@ const AddTransaction = () => {
                 <View>
                     <Input
                         label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Complete Address</Label>}
-                        onChangeText={(e) => dispatch({ address: e })}
-                        value={state.address}
+                        onChangeText={(e) => dispatch({ complete_address: e })}
+                        value={state.complete_address}
                         placeholder='Complete Address'
                         multiline={true}
                         numberOfLines={2}
@@ -179,22 +198,7 @@ const AddTransaction = () => {
                         onCheckChange={(data) => dispatch({ gender: data })}
                     />
                 </View>
-                <View>
-                    <Input
-                        label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Date</Label>}
-                        onChangeText={(e) => { }}
-                        value={state.date}
-                        placeholder='Date'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Label type='sm' weight='regular' className='mb-2 text-gray-600'>Donation Type</Label>
-                    <DropDown
-                        data={[{ label: 'Box', value: '1' }, { label: 'Sadqa', value: '2' }, { label: 'Zakat', value: '3' }]}
-                        onChangeValue={(value) => dispatch({ donationType: value })}
-                    />
-                </View>
+
                 <View>
                     <Input
                         label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Amount (PKR)</Label>}
@@ -209,6 +213,7 @@ const AddTransaction = () => {
                     onPress={print}
                     title="Print Reciept"
                     className='mb-2'
+                    isLoading={isLoading}
                 />
             </ScrollView>
         </LayoutContainer>

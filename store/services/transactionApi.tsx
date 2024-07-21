@@ -2,25 +2,24 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseURL } from './config';
 import customBaseQuery from './CustomFetchQuery';
 
-export const authApi = createApi({
-    reducerPath: 'authApi',
+export const transactionApi = createApi({
+    reducerPath: 'transactionApi',
     baseQuery: customBaseQuery(baseURL),
     endpoints: (builder) => ({
-        login: builder.mutation({
+        transaction: builder.mutation({
             query: (credentials) => ({
-                url: '/token/',
+                url: '/transaction/',
                 method: 'POST',
                 body: credentials,
             }),
         }),
-        signup: builder.mutation({
-            query: (credentials) => ({
-                url: '/register/',
-                method: 'POST',
-                body: credentials,
+        getTransactions: builder.query({
+            query: () => ({
+                url: '/transaction/',
+                method: 'GET',
             }),
-        })
+        }),
     }),
 });
 
-export const { useLoginMutation, useSignupMutation } = authApi;
+export const { useTransactionMutation, useGetTransactionsQuery } = transactionApi;

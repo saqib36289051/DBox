@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, Platform, Pressable, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Label from '@/components/ui/Label';
-import { getFirstLetters } from '@/utils/utils';
+import { getDate, getFirstLetters, getTime } from '@/utils/utils';
 import Badge from '@/components/ui/Badge';
 import { AntDesign, Entypo, Feather, FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
@@ -13,14 +13,12 @@ type Props = DonationTransactinList & {
 }
 
 const ListItemCard: React.FC<Props> = ({
-    transactionId,
-    collectedAmount,
-    collectedDate,
-    collectedTime,
-    custodianName,
-    custodianImg,
-    district,
-    address,
+    id,
+    amount,
+    created_at,
+    name,
+    city,
+    complete_address,
     handlePdfPrint,
     handlePdfShare
 }) => {
@@ -34,19 +32,19 @@ const ListItemCard: React.FC<Props> = ({
                 styles.card
             ]
             }
-            key={transactionId}
+            key={id}
         // className="flex-row space-x-2 border bg-white border-gray-200 my-1 rounded-md px-3 pt-3 pb-1"
         >
             <View>
                 {
-                    custodianImg ?
-                        <Image
-                            className="rounded-full w-12 h-12 object-contain shadow"
-                            source={{ uri: custodianImg }} />
-                        :
-                        <View className="bg-green-700 w-12 h-12 rounded-full flex items-center justify-center">
-                            <Label type='p' weight='bold' className='text-white'>{getFirstLetters(custodianName)}</Label>
-                        </View>
+                    // custodianImg ?
+                    //     <Image
+                    //         className="rounded-full w-12 h-12 object-contain shadow"
+                    //         source={{ uri: custodianImg }} />
+                    //     :
+                    <View className="bg-green-700 w-12 h-12 rounded-full flex items-center justify-center">
+                        <Label type='p' weight='bold' className='text-white'>{getFirstLetters(name)}</Label>
+                    </View>
                 }
             </View>
 
@@ -55,7 +53,7 @@ const ListItemCard: React.FC<Props> = ({
                     type="p"
                     weight="medium"
                 >
-                    {custodianName}
+                    {name}
                 </Label>
                 <View className='flex w-[50%] h-[1] bg-slate-400 mt-1'></View>
                 <View className='flex mt-1 space-y-1'>
@@ -69,7 +67,7 @@ const ListItemCard: React.FC<Props> = ({
                         >
                             Collected Amount:
                         </Label>
-                        <Label type='xs' weight='medium' className={'text-red-600'}>{collectedAmount}</Label>
+                        <Label type='xs' weight='medium' className={'text-red-600'}>{amount}</Label>
 
                     </View>
                     <View className="flex-row space-x-2 items-center">
@@ -81,8 +79,8 @@ const ListItemCard: React.FC<Props> = ({
                         >
                             Date & Time:
                         </Label>
-                        <Label type='xs' weight='regular' className={'text-gray-600'}>{collectedDate}</Label>
-                        <Label type='xs' weight='regular' className={'text-gray-600'}>|| {collectedTime}</Label>
+                        <Label type='xs' weight='regular' className={'text-gray-600'}>{getDate(created_at)}</Label>
+                        <Label type='xs' weight='regular' className={'text-gray-600'}>|| {getTime(created_at)}</Label>
 
 
                     </View>
@@ -95,7 +93,7 @@ const ListItemCard: React.FC<Props> = ({
                         >
                             District:
                         </Label>
-                        <Label type='xs' weight='regular' className={'text-gray-600'}>{district}</Label>
+                        <Label type='xs' weight='regular' className={'text-gray-600'}>{city}</Label>
 
                     </View>
                     <View className="flex-row space-x-2 items-center">
@@ -107,7 +105,7 @@ const ListItemCard: React.FC<Props> = ({
                         >
                             Address:
                         </Label>
-                        <Label type='xs' weight='regular' className={'text-gray-600'}>{address}</Label>
+                        <Label type='xs' weight='regular' className={'text-gray-600'}>{complete_address}</Label>
 
                     </View>
 

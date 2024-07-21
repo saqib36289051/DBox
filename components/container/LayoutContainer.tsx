@@ -7,7 +7,7 @@ type Props = {
 
 const LayoutContainer = (props: Props) => {
     return (
-        <View className=" pt-10 px-4">
+        <View className="pt-10 px-4 mb-12">
             {props.children}
         </View>
     )

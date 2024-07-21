@@ -12,7 +12,6 @@ type Props = {
 const CheckboxGroup = (props: Props) => {
     const { data, onCheckChange } = props;
     const [checkBoxes, setCheckBoxes] = useState(data);
-    console.log("🚀 ~ CheckboxGroup ~ checkBoxes:", checkBoxes)
 
     const handleCheckboxPress = (checked: boolean, id: number) => {
         const updatedCheckBoxes = checkBoxes.map(item =>

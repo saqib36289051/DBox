@@ -1,22 +1,19 @@
 export type DonationList = {
   id: number;
   name: string;
-  collectedAmount: number;
   status: string;
-  district: string;
-  address: string;
-  img: string;
+  city: string;
+  complete_address: string;
+  image: string;
 };
 
 export type DonationTransactinList = {
-  transactionId: number;
-  collectedAmount: number;
-  collectedDate: string;
-  collectedTime: string;
-  custodianName: string;
-  custodianImg: string;
-  district: string;
-  address: string;
+  id: number;
+  amount: number;
+  created_at: string;
+  name: string;
+  city: string;
+  complete_address: string;
 };
 
 export type GenderListType = {

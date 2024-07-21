@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import LayoutContainer from '@/components/container/LayoutContainer';
-import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme } from 'react-native';
-import data from "@/assets/json/donationTransactionList.json"
+import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme, RefreshControl } from 'react-native';
 import Input from '@/components/ui/Input';
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
@@ -15,6 +14,7 @@ import Button from '@/components/ui/Button';
 import TransactionIcon from '@/components/navigation/TransactionIcon';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import { useGetTransactionsQuery } from '@/store/services/transactionApi';
 
 const html = `
 <html>
@@ -34,7 +34,8 @@ const html = `
 
 export default function HomeScreen() {
   const [search, setSearch] = useState('');
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
+  const { data, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({})
   const router = useRouter()
   const colorScheme = useColorScheme()
 
@@ -42,8 +43,6 @@ export default function HomeScreen() {
     const { uri } = await Print.printToFileAsync({ html });
     await Sharing.shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
   };
-
-
 
   const onFilterList = (text: string) => {
     setSearch(text);
@@ -73,15 +72,21 @@ export default function HomeScreen() {
         <Button className='bg-green-700 py-1 px-2' iconBtn={<TransactionIcon width={38} height={38} />} onPress={() => router.navigate("/form/addTransaction")} />
       </View>
       <FlatList
-        data={filteredData}
-        keyExtractor={(item, index) => item.transactionId.toString()}
+        data={data?.results}
+        keyExtractor={(item, index) => item.id.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <ListItemCard handlePdfPrint={handlePdfView} handlePdfShare={handlePdfView} {...item} />}
         ListHeaderComponent={<ListHeader />}
         ListFooterComponent={<ListFooter />}
         style={{
-          marginBottom: 50
+          // marginBottom: 50,
+          height: '100%'
         }}
+        refreshControl={<RefreshControl
+          refreshing={isFetching}
+          onRefresh={refetch}
+        />
+        }
       />
 
     </LayoutContainer>
