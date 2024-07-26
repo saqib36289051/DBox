@@ -5,6 +5,7 @@ export type DonationList = {
   city: string;
   complete_address: string;
   image: string;
+  mobile_number: string;
 };
 
 export type DonationTransactinList = {
@@ -15,6 +16,7 @@ export type DonationTransactinList = {
   city: string;
   complete_address: string;
   donation_type: string;
+  mobile_number: string;
 };
 
 export type GenderListType = {

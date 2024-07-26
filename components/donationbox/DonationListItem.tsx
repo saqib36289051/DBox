@@ -4,7 +4,7 @@ import Label from '@/components/ui/Label';
 import { getFirstLetters } from '@/utils/utils';
 import Badge from '@/components/ui/Badge';
 import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { DonationList } from '@/constants/Types';
 
 type Props = DonationList & {}
@@ -15,11 +15,12 @@ const DonationListItem: React.FC<Props> = ({
     status = 'Active',
     city,
     complete_address,
+    mobile_number,
     image
 }) => {
     return (
         <Pressable
-            onPress={() => { }}
+            onPress={() => router.navigate(`/form/boxTransaction?id=${id}&name=${name}&mobile_number=${mobile_number}&city=${city}&complete_address=${complete_address}`)}
             style={({ pressed }) => [
                 {
                     backgroundColor: pressed ? "#e0f2fe" : "#fff",

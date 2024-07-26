@@ -19,7 +19,6 @@ export default function DonationBox() {
   const { data, error, isLoading, refetch, isFetching } = useGetBoxQuery({
     search: debouncedSearch
   })
-  console.log("🚀 ~ DonationBox ~ data:", data)
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -42,7 +41,7 @@ export default function DonationBox() {
           <Input
             icon={<Feather name="search" size={24} color={Colors[colorScheme ?? 'light'].icon} />}
             placeholder='Search for Donation Box'
-            onChangeText={(e)=>handleSearch(e)}
+            onChangeText={(e) => handleSearch(e)}
             value={search}
           />
         </View>
@@ -54,7 +53,7 @@ export default function DonationBox() {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <DonationListItem {...item} />}
         ListHeaderComponent={<DonationListHeader />}
-        ListFooterComponent={<DonationListFooter />}
+        ListFooterComponent={<DonationListFooter reload={refetch} isShowReloadBtn={data?.results > 0} />}
         style={{
           // marginBottom: 50,
           // backgroundColor:'red',

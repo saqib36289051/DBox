@@ -4,6 +4,7 @@ import customBaseQuery from './CustomFetchQuery';
 
 export const boxApi = createApi({
     reducerPath: 'boxApi',
+    tagTypes: ['Box'],
     baseQuery: customBaseQuery(baseURL),
     endpoints: (builder) => ({
         box: builder.mutation({
@@ -13,6 +14,7 @@ export const boxApi = createApi({
                 headers: { "Content-Type": "multipart/form-data" },
                 body: credentials,
             }),
+            invalidatesTags: ['Box'],
         }),
         getBox: builder.query({
             query: (filters) => ({
@@ -20,6 +22,7 @@ export const boxApi = createApi({
                 method: 'GET',
                 params: filters,
             }),
+            providesTags: ['Box'],
         }),
     }),
 });

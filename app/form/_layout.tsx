@@ -5,6 +5,7 @@ export default function RootLayout() {
         <Stack>
             <Stack.Screen name="addBox" options={{ headerShown: false }} />
             <Stack.Screen name="addTransaction" options={{ headerShown: false }} />
+            <Stack.Screen name="boxTransaction" options={{ headerShown: false }} />
         </Stack>
     );
 }

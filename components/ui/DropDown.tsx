@@ -10,6 +10,7 @@ type Props = {
     }[],
     position?: 'top' | 'bottom';
     onChangeValue: (value: string) => void;
+    value?: string;
 };
 
 type DropDownItem = {
@@ -54,7 +55,7 @@ const DropDown = (props: Props) => {
             labelField="label"
             valueField="value"
             placeholder="Select Donation Type"
-            value={value}
+            value={props?.value ?? value}
             onChange={onChangeValue}
             renderLeftIcon={() => (
                 <AntDesign style={styles.icon} color="black" name="Safety" size={20} />

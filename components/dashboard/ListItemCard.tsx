@@ -86,16 +86,6 @@ const ListItemCard: React.FC<Props> = ({
 
 
                     </View>
-                    <View className="flex-row space-x-2 items-center">
-                        <Label
-                            type="xs"
-                            weight="medium"
-                            className='text["rgb(21,128,61)"]'
-                        >
-                            TYPE:
-                        </Label>
-                        <Label type='xs' weight='medium' className={'text["rgb(21,128,61)"]'}>{donation_type}</Label>
-                    </View>
                     {donation_type === Transaction_TYPES.BOX &&
                         <>
                             <View className="flex-row space-x-2 items-center">
@@ -124,6 +114,16 @@ const ListItemCard: React.FC<Props> = ({
                             </View>
                         </>
                     }
+                    <View className="flex-row space-x-2 items-center">
+                        <Label
+                            type="xs"
+                            weight="medium"
+                            className='text["rgb(21,128,61)"]'
+                        >
+                            TYPE:
+                        </Label>
+                        <Label type='xs' weight='medium' className={'text["rgb(21,128,61)"]'}>{donation_type}</Label>
+                    </View>
 
                     <View className='flex flex-row justify-end'>
                         <Pressable
