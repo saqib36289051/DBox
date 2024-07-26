@@ -6,6 +6,7 @@ import Badge from '@/components/ui/Badge';
 import { AntDesign, Entypo, Feather, FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { DonationList, DonationTransactinList } from '@/constants/Types';
+import { Transaction_TYPES } from '@/constants/Enum';
 
 type Props = DonationTransactinList & {
     handlePdfPrint: () => void;
@@ -19,6 +20,7 @@ const ListItemCard: React.FC<Props> = ({
     name,
     city,
     complete_address,
+    donation_type,
     handlePdfPrint,
     handlePdfShare
 }) => {
@@ -59,7 +61,7 @@ const ListItemCard: React.FC<Props> = ({
                 <View className='flex mt-1 space-y-1'>
 
                     <View className="flex-row space-x-2 items-center">
-                        <MaterialCommunityIcons name="currency-rupee" size={14} color="#0891b2" />
+                        <MaterialCommunityIcons name="currency-rupee" size={14} color="rgb(21,128,61)" />
                         <Label
                             type="xs"
                             weight="medium"
@@ -71,7 +73,7 @@ const ListItemCard: React.FC<Props> = ({
 
                     </View>
                     <View className="flex-row space-x-2 items-center">
-                        <MaterialCommunityIcons name="clock-time-three-outline" size={14} color="#0891b2" />
+                        <MaterialCommunityIcons name="clock-time-three-outline" size={14} color="rgb(21,128,61)" />
                         <Label
                             type="xs"
                             weight="medium"
@@ -85,29 +87,43 @@ const ListItemCard: React.FC<Props> = ({
 
                     </View>
                     <View className="flex-row space-x-2 items-center">
-                        <MaterialCommunityIcons name="map-search" size={12} color="#0891b2" />
                         <Label
                             type="xs"
                             weight="medium"
-                            className='text-gray-600'
+                            className='text["rgb(21,128,61)"]'
                         >
-                            District:
+                            TYPE:
                         </Label>
-                        <Label type='xs' weight='regular' className={'text-gray-600'}>{city}</Label>
-
+                        <Label type='xs' weight='medium' className={'text["rgb(21,128,61)"]'}>{donation_type}</Label>
                     </View>
-                    <View className="flex-row space-x-2 items-center">
-                        <Entypo name="address" size={14} color="#0891b2" />
-                        <Label
-                            type="xs"
-                            weight="medium"
-                            className='text-gray-600'
-                        >
-                            Address:
-                        </Label>
-                        <Label type='xs' weight='regular' className={'text-gray-600'}>{complete_address}</Label>
+                    {donation_type === Transaction_TYPES.BOX &&
+                        <>
+                            <View className="flex-row space-x-2 items-center">
+                                <MaterialCommunityIcons name="map-search" size={12} color="rgb(21,128,61)" />
+                                <Label
+                                    type="xs"
+                                    weight="medium"
+                                    className='text-gray-600'
+                                >
+                                    District:
+                                </Label>
+                                <Label type='xs' weight='regular' className={'text-gray-600'}>{city}</Label>
 
-                    </View>
+                            </View>
+                            <View className="flex-row space-x-2 items-center">
+                                <Entypo name="address" size={14} color="rgb(21,128,61)" />
+                                <Label
+                                    type="xs"
+                                    weight="medium"
+                                    className='text-gray-600'
+                                >
+                                    Address:
+                                </Label>
+                                <Label type='xs' weight='regular' className={'text-gray-600'}>{complete_address}</Label>
+
+                            </View>
+                        </>
+                    }
 
                     <View className='flex flex-row justify-end'>
                         <Pressable
@@ -125,7 +141,7 @@ const ListItemCard: React.FC<Props> = ({
                             }
                         </Pressable>
 
-                        <Pressable
+                        {/* <Pressable
                             onPress={handlePdfShare}
                             style={({ pressed }) => [
                                 {
@@ -138,7 +154,7 @@ const ListItemCard: React.FC<Props> = ({
                                 <FontAwesome6 name="share-square" size={22} color={`${pressed ? "#0e7490" : "#4b5563"}`} />
                             )
                             }
-                        </Pressable>
+                        </Pressable> */}
                     </View>
                 </View>
             </View>

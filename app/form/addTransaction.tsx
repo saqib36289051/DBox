@@ -6,12 +6,10 @@ import LayoutContainer from '@/components/container/LayoutContainer';
 import Input from '@/components/ui/Input';
 import Label from '@/components/ui/Label';
 import Button from '@/components/ui/Button';
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import CheckboxGroup from '@/components/ui/CheckboxGroup';
-import { GenderListType } from '@/constants/Types';
 import DropDown from '@/components/ui/DropDown';
 import { useTransactionMutation } from '@/store/services/transactionApi';
 import { useRouter } from 'expo-router';
+import { GENERAL_TRANSACTION_TYPE } from '@/constants/Enum';
 
 ThermalPrinterModule.defaultConfig = {
     ...ThermalPrinterModule.defaultConfig,
@@ -23,13 +21,8 @@ ThermalPrinterModule.defaultConfig = {
 type State = {
     mobile_number: string;
     name: string;
-    province: string;
-    city: string;
-    area: string;
-    complete_address: string;
     donation_type: string;
     amount: string;
-    gender: GenderListType[];
 }
 
 type Action = Partial<State>;
@@ -37,28 +30,15 @@ type Action = Partial<State>;
 const AddTransaction = () => {
     const colorScheme = useColorScheme();
     const router = useRouter()
+    const [errors, setErrors] = useState<any>({})
     const [transaction, { isLoading, isError, error }] = useTransactionMutation()
     const [state, dispatch] = useReducer((state: State, action: Action) => {
         return { ...state, ...action }
     }, {
         mobile_number: '',
         name: '',
-        province: '',
-        city: '',
-        area: '',
-        complete_address: '',
         donation_type: "",
         amount: "",
-        gender: [{
-            id: 1,
-            text: "Male",
-            isChecked: false,
-        },
-        {
-            id: 2,
-            text: "Female",
-            isChecked: false,
-        }]
     })
     const text =
         '[L]--------------------\n' +
@@ -68,6 +48,35 @@ const AddTransaction = () => {
         `[L]MOBILE: ${state.mobile_number}\n` +
         `[L]Donation: ${state.amount}\n` +
         '[L]WE ARE VERY THANKFUL FOR YOUR DONATION AND IT WILL USE FOR THE CHILDRENS TO PROVIDE FREE FOOD AND EDUCATION JAZAK ALLAH'
+
+    const validation = () => {
+        let error = {
+            mobile_number: '',
+            name: '',
+            amount: '',
+            donation_type: ""
+        }
+
+        if (state.mobile_number === '') {
+            error.mobile_number = 'Mobile Number is required'
+        }
+
+        if (state.name === '') {
+            error.name = 'Name is required'
+        }
+
+        if (state.amount === '') {
+            error.amount = 'Amount is required'
+        }
+
+        if (state.donation_type === '') {
+            error.donation_type = 'Donation Type is required'
+        }
+
+        setErrors(error)
+
+        return !(error.mobile_number || error.name || error.amount || error.donation_type)
+    }
 
     const scanBluetoothDevices = async () => {
         try {
@@ -95,9 +104,11 @@ const AddTransaction = () => {
         // }
 
         try {
+            if (!validation()) {
+                return
+            }
             const res = await transaction({
                 ...state,
-                gender: state.gender.find(g => g.isChecked === true)?.text
             })
             if (res?.error) {
                 Object.entries(res?.error?.data)?.map(([key, value]) => {
@@ -128,9 +139,11 @@ const AddTransaction = () => {
                 <View>
                     <Label type='sm' weight='regular' className='mb-2 text-gray-600'>Donation Type</Label>
                     <DropDown
-                        data={[{ label: 'Box', value: '1' }, { label: 'Sadqa', value: '2' }, { label: 'Zakat', value: '3' }]}
+                        data={GENERAL_TRANSACTION_TYPE}
                         onChangeValue={(value) => dispatch({ donation_type: value })}
+                        position="bottom"
                     />
+                    {errors.donation_type !== '' && <Label type='xs' weight='medium' className='text-red-500'>{errors.donation_type}</Label>}
                 </View>
                 <View>
                     <Input
@@ -141,6 +154,7 @@ const AddTransaction = () => {
                         placeholder='+920000000000'
                         placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
                     />
+                    {errors.mobile_number && <Label type='xs' weight='medium' className='text-red-500'>{errors.mobile_number}</Label>}
                 </View>
                 <View>
                     <Input
@@ -150,55 +164,8 @@ const AddTransaction = () => {
                         placeholder='Enter Custodian Name'
                         placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
                     />
+                    {errors.name && <Label type='xs' weight='medium' className='text-red-500'>{errors.name}</Label>}
                 </View>
-                <View>
-                    <Input
-                        label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>State / Province</Label>}
-                        onChangeText={(e) => dispatch({ province: e })}
-                        value={state.province}
-                        placeholder='State / Province'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>City</Label>}
-                        onChangeText={(e) => dispatch({ city: e })}
-                        value={state.city}
-                        placeholder='City'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Area</Label>}
-                        onChangeText={(e) => dispatch({ area: e })}
-                        value={state.area}
-                        placeholder='Area'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Input
-                        label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Complete Address</Label>}
-                        onChangeText={(e) => dispatch({ complete_address: e })}
-                        value={state.complete_address}
-                        placeholder='Complete Address'
-                        multiline={true}
-                        numberOfLines={2}
-                        className='h-18'
-                        textAlignVertical='top'
-                        placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-                    />
-                </View>
-                <View>
-                    <Label type='sm' weight='regular' className='mb-3 text-gray-600'>Gender</Label>
-                    <CheckboxGroup
-                        data={state.gender}
-                        onCheckChange={(data) => dispatch({ gender: data })}
-                    />
-                </View>
-
                 <View>
                     <Input
                         label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Amount (PKR)</Label>}
@@ -207,6 +174,7 @@ const AddTransaction = () => {
                         placeholder='Amount'
                         placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
                     />
+                    {errors.amount && <Label type='xs' weight='medium' className='text-red-500'>{errors.amount}</Label>}
                 </View>
 
                 <Button

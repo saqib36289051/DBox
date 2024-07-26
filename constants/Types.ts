@@ -14,6 +14,7 @@ export type DonationTransactinList = {
   name: string;
   city: string;
   complete_address: string;
+  donation_type: string;
 };
 
 export type GenderListType = {

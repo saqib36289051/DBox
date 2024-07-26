@@ -6,8 +6,8 @@ type Props = {}
 
 const DonationListHeader = (props: Props) => {
   return (
-    <View className='flex items-center justify-center my-1'>
-      <Label type='p' weight='medium' className='text-green-700'>Donation Transaction List</Label>
+    <View className='justify-center items-center my-1 bg-green-200 w-[45%] rounded-full'>
+      <Label type='xs' weight='medium' className='text-green-800'>Donation Transaction List</Label>
     </View>
   )
 }

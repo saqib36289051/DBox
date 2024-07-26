@@ -41,6 +41,12 @@
             "./assets/fonts/Roboto-Thin.ttf"
           ]
         }
+      ],
+      [
+        "expo-updates",
+        {
+          "username": "saqibdev"
+        }
       ]
     ],
     "experiments": {

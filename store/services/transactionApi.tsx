@@ -4,6 +4,7 @@ import customBaseQuery from './CustomFetchQuery';
 
 export const transactionApi = createApi({
     reducerPath: 'transactionApi',
+    tagTypes: ['Transaction'],
     baseQuery: customBaseQuery(baseURL),
     endpoints: (builder) => ({
         transaction: builder.mutation({
@@ -12,12 +13,15 @@ export const transactionApi = createApi({
                 method: 'POST',
                 body: credentials,
             }),
+            invalidatesTags: ["Transaction"]
         }),
         getTransactions: builder.query({
-            query: () => ({
+            query: (filters) => ({
                 url: '/transaction/',
                 method: 'GET',
+                params: filters
             }),
+            providesTags: ["Transaction"]
         }),
     }),
 });

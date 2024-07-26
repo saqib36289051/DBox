@@ -34,28 +34,29 @@ const html = `
 
 export default function HomeScreen() {
   const [search, setSearch] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
-  const { data, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({})
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const { data, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({
+    search: debouncedSearch
+  })
   const router = useRouter()
   const colorScheme = useColorScheme()
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearch(search);
+      refetch({ force: true })
+    }, 500)
+
+    return () => clearTimeout(timerId);
+  }, [search]);
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+  };
 
   const handlePdfView = async () => {
     const { uri } = await Print.printToFileAsync({ html });
     await Sharing.shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
-  };
-
-  const onFilterList = (text: string) => {
-    setSearch(text);
-    if (text) {
-      const newData = data.filter((item) => {
-        const itemData = item.custodianName ? item.custodianName.toUpperCase() : ''.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilteredData(newData);
-    } else {
-      setFilteredData(data);
-    }
   };
 
   return (
@@ -65,7 +66,7 @@ export default function HomeScreen() {
           <Input
             icon={<Feather name="search" size={24} color={Colors[colorScheme ?? 'light'].icon} />}
             placeholder='Search for transaction'
-            onChangeText={onFilterList}
+            onChangeText={(e) => handleSearch(e)}
             value={search}
           />
         </View>

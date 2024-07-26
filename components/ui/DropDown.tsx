@@ -50,12 +50,10 @@ const DropDown = (props: Props) => {
             iconStyle={styles.iconStyle}
             data={props?.data}
             dropdownPosition={props?.position || 'top'}
-            search
             maxHeight={300}
             labelField="label"
             valueField="value"
             placeholder="Select Donation Type"
-            searchPlaceholder="Search..."
             value={value}
             onChange={onChangeValue}
             renderLeftIcon={() => (
