@@ -10,6 +10,7 @@ import DropDown from '@/components/ui/DropDown';
 import { useTransactionMutation } from '@/store/services/transactionApi';
 import { useRouter } from 'expo-router';
 import { GENERAL_TRANSACTION_TYPE } from '@/constants/Enum';
+import { printReceipt } from '@/utils/utils';
 
 ThermalPrinterModule.defaultConfig = {
     ...ThermalPrinterModule.defaultConfig,
@@ -41,13 +42,15 @@ const AddTransaction = () => {
         amount: "",
     })
     const text =
-        '[L]--------------------\n' +
-        '[L]JAMIA NIZAME MUSTAFA\n' +
-        '[L]--------------------\n' +
-        `[L]NAME: ${state.name}\n` +
-        `[L]MOBILE: ${state.mobile_number}\n` +
-        `[L]Donation: ${state.amount}\n` +
-        '[L]WE ARE VERY THANKFUL FOR YOUR DONATION AND IT WILL USE FOR THE CHILDRENS TO PROVIDE FREE FOOD AND EDUCATION JAZAK ALLAH'
+        "[C]<u><font size='big'>JAMIA NIZAM-E-MUSTAFA</font></u>\n" +
+        "[L]\n" +
+        `[L]<b>NAME:</b>[R]${state.name}\n` +
+        `[L]<b>MOBILE:</b>[R]${state.mobile_number}\n` +
+        `[L]<b>Donation:</b>[R]${state.amount}\n` +
+        `[L]<b>Collection Mode:</b>[R]${state.donation_type}\n` +
+        "[L]\n" +
+        `[L]<b><u>Jamia Niazame Mustafa</u></b> will use your funds wherever it deems fit for religious and charitable purposes.\n` +
+        "[C]<qrcode size='20'>JAMIA NIZAM-E-MUSTAFA</qrcode>";
 
     const validation = () => {
         let error = {
@@ -78,31 +81,8 @@ const AddTransaction = () => {
         return !(error.mobile_number || error.name || error.amount || error.donation_type)
     }
 
-    const scanBluetoothDevices = async () => {
-        try {
-            const devices = await ThermalPrinterModule.getBluetoothDeviceList();
-            console.log('Bluetooth devices:', devices);
-            return devices;
-        } catch (err) {
-            console.error('Error scanning Bluetooth devices:', err.message);
-            return [];
-        }
-    };
 
     const print = async () => {
-        // const devices = await scanBluetoothDevices();
-        // if (devices.length === 0) {
-        //     Alert.alert('No Bluetooth devices found');
-        //     return;
-        // }
-
-        // const printer = devices.find(device => device.deviceName === 'InnerPrinter'); // Adjust this to your printer's name
-
-        // if (!printer) {
-        //     Alert.alert('Bluetooth Printer not found');
-        //     return;
-        // }
-
         try {
             if (!validation()) {
                 return
@@ -116,13 +96,8 @@ const AddTransaction = () => {
                 })
                 return
             }
+            printReceipt(text)
             router.back()
-            // await ThermalPrinterModule.printBluetooth({
-            //     payload: text,
-            //     macAddress: printer.macAddress,
-            //     printerNbrCharactersPerLine: 32,
-            // });
-            // console.log('done printing');
         } catch (err) {
             console.error('Error printing:', err);
         }

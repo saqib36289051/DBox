@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import LayoutContainer from '@/components/container/LayoutContainer';
-import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme, RefreshControl } from 'react-native';
+import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme, RefreshControl, Alert } from 'react-native';
 import Input from '@/components/ui/Input';
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
@@ -15,6 +15,8 @@ import TransactionIcon from '@/components/navigation/TransactionIcon';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { useGetTransactionsQuery } from '@/store/services/transactionApi';
+import { printReceipt } from '@/utils/utils';
+
 
 const html = `
 <html>
@@ -54,9 +56,18 @@ export default function HomeScreen() {
     setSearch(value);
   };
 
-  const handlePdfView = async () => {
-    const { uri } = await Print.printToFileAsync({ html });
-    await Sharing.shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+  const handlePdfView = async (name: string, mobile_number: string, amount: number, donation_type: string) => {
+    const text =
+      "[C]<u><font size='big'>JAMIA NIZAM-E-MUSTAFA</font></u>\n" +
+      "[L]\n" +
+      `[L]<b>NAME:</b>[R]${name}\n` +
+      `[L]<b>MOBILE:</b>[R]${mobile_number}\n` +
+      `[L]<b>Donation:</b>[R]${amount}\n` +
+      `[L]<b>Collection Mode:</b>[R]${donation_type}\n` +
+      "[L]\n" +
+      `[L]<b><u>Jamia Niazame Mustafa</u></b> will use your funds wherever it deems fit for religious and charitable purposes.\n` +
+      "[C]<qrcode size='20'>JAMIA NIZAM-E-MUSTAFA</qrcode>";
+    await printReceipt(text)
   };
 
   return (

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store'
@@ -32,8 +32,8 @@ const Login = (props: Props) => {
     try {
 
       const response = await login({ phone_number: userId, password: password })
-      console.log("🚀 ~ onLogin ~ response:", response)
-      if (response.error) {
+      if (response.error?.status == 401) {
+        setErrors({ userId: "", password: 'Invalid User ID or Password' })
         return
       }
       storeData('userInfo', response?.data)
@@ -69,9 +69,11 @@ const Login = (props: Props) => {
   return (
     <View className="flex-1 bg-white justify-around">
       <View className="flex h-1/3 items-center justify-center">
-        <Label type="H3" className=" text-green-600 font-black">
-          DBox
-        </Label>
+        <Image
+          source={require('../assets/images/icon.png')}
+          resizeMode='contain'
+          style={{ width: 120, height: 120 }}
+        />
       </View>
 
       <View className="space-y-2 px-4 w-full">

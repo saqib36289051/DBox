@@ -1,4 +1,7 @@
 import * as SecureStore from "expo-secure-store";
+import { Alert } from "react-native";
+import ThermalPrinterModule from "react-native-thermal-printer";
+
 export const getFirstLetters = (str: string) => {
   return str
     .split(" ")
@@ -34,19 +37,44 @@ export const removeData = async (key: string) => {
 
 export const getDate = (date: string) => {
   return date.split("T")[0];
-}
-
+};
 
 export const getTime = (date: string) => {
   const d = new Date(date);
 
-const options = { 
-  hour: '2-digit', 
-  minute: '2-digit', 
-  hour12: true 
+  const options = {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
+
+  const timeFormatter = new Intl.DateTimeFormat("en-US", options);
+
+  return timeFormatter.format(d);
 };
 
-const timeFormatter = new Intl.DateTimeFormat('en-US', options);
+const scanBluetoothDevices = async () => {
+  try {
+    const devices = await ThermalPrinterModule.getBluetoothDeviceList();
+    return devices;
+  } catch (err) {
+    console.error("Error scanning Bluetooth devices:", err?.message);
+    return [];
+  }
+};
 
-return timeFormatter.format(d);
-}
+export const printReceipt = async (text: string) => {
+  const devices = await scanBluetoothDevices();
+  if (devices.length === 0) {
+    Alert.alert("No Bluetooth devices found");
+    return;
+  }
+  const printer = devices.find(
+    (device) => device.deviceName === "InnerPrinter"
+  );
+  await ThermalPrinterModule.printBluetooth({
+    payload: text,
+    macAddress: printer?.macAddress,
+    printerNbrCharactersPerLine: 32,
+  });
+};

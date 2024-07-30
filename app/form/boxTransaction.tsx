@@ -9,6 +9,7 @@ import { GENERAL_TRANSACTION_TYPE, Transaction_TYPES } from '@/constants/Enum'
 import Input from '@/components/ui/Input'
 import { useTransactionMutation } from '@/store/services/transactionApi'
 import Button from '@/components/ui/Button'
+import { printReceipt } from '@/utils/utils'
 
 type Props = {}
 
@@ -35,6 +36,17 @@ const BoxTransaction = (props: Props) => {
         donation_type: "BOX",
         amount: "",
     })
+
+    const text =
+        "[C]<u><font size='big'>JAMIA NIZAM-E-MUSTAFA</font></u>\n" +
+        "[L]\n" +
+        `[L]<b>NAME:</b>[R]${state.name}\n` +
+        `[L]<b>MOBILE:</b>[R]${state.mobile_number}\n` +
+        `[L]<b>Donation:</b>[R]${state.amount}\n` +
+        `[L]<b>Collection Mode:</b>[R]${state.donation_type}\n` +
+        "[L]\n" +
+        `[L]<b><u>Jamia Niazame Mustafa</u></b> will use your funds wherever it deems fit for religious and charitable purposes.\n` +
+        "[C]<qrcode size='20'>JAMIA NIZAM-E-MUSTAFA</qrcode>";
 
     const validation = () => {
         let error = {
@@ -78,13 +90,8 @@ const BoxTransaction = (props: Props) => {
                 })
                 return
             }
+            printReceipt(text)
             router.back()
-            // await ThermalPrinterModule.printBluetooth({
-            //     payload: text,
-            //     macAddress: printer.macAddress,
-            //     printerNbrCharactersPerLine: 32,
-            // });
-            // console.log('done printing');
         } catch (err) {
             console.error('Error printing:', err);
         }

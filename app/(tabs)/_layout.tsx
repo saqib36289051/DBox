@@ -64,6 +64,7 @@ export default function TabLayout() {
           // tabBarLabelStyle: {
           //   display: 'none'
           // },
+          href: null,
           title: 'Scan',
           tabBarIcon: ({ color, focused }) => (
             // <View className="w-[75] h-[75] bg-white flex items-center justify-center rounded-full -mt-7">
@@ -73,7 +74,7 @@ export default function TabLayout() {
               height={42}
               strokeWidth={1.2}
               stroke={focused ? Colors[colorScheme ?? 'light'].tint : color}
-              // fill={"#fff"}
+            // fill={"#fff"}
             />
             //   </View>
             // </View>
@@ -84,6 +85,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="setting"
         options={{
+          href: null,
           title: 'Settings',
           tabBarIcon: ({ color, focused }) => (
             <Setting

@@ -9,7 +9,7 @@ import { DonationList, DonationTransactinList } from '@/constants/Types';
 import { Transaction_TYPES } from '@/constants/Enum';
 
 type Props = DonationTransactinList & {
-    handlePdfPrint: () => void;
+    handlePdfPrint: (name: string, mobile_number: string, amount: number, donation_type: string) => void;
     handlePdfShare: () => void;
 }
 
@@ -20,6 +20,7 @@ const ListItemCard: React.FC<Props> = ({
     name,
     city,
     complete_address,
+    mobile_number,
     donation_type,
     handlePdfPrint,
     handlePdfShare
@@ -127,7 +128,7 @@ const ListItemCard: React.FC<Props> = ({
 
                     <View className='flex flex-row justify-end'>
                         <Pressable
-                            onPress={handlePdfPrint}
+                            onPress={() => handlePdfPrint(name, mobile_number, amount, donation_type)}
                             style={({ pressed }) => [
                                 {
                                     padding: 8,
