@@ -11,6 +11,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import ScanIcon from '@/components/navigation/ScanIcon';
 import Setting from '@/components/navigation/Setting';
+import TransactionHistory from '@/components/navigation/TransactionHistory';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -29,12 +30,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Dashboard',
+          title: 'Transactions',
           tabBarIcon: ({ color, focused }) => (
-            <DashboardIcon
+            <TransactionHistory
               width={32}
               height={32}
-              strokeWidth={8}
+              strokeWidth={3}
               stroke={focused ? Colors[colorScheme ?? 'light'].tint : color}
               fill={focused ? Colors[colorScheme ?? 'light'].tint : color}
             />
