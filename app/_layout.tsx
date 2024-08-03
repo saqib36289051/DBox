@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { store } from '@/store';
 import '../global.css'
 import { useFonts } from 'expo-font';
+import * as Updates from 'expo-updates';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,6 +20,21 @@ export default function RootLayout() {
     'Roboto-Thin': require('../assets/fonts/Roboto-Thin.ttf'),
     'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
   });
+
+  useEffect(() => {
+    onFetchUpdateAsync();
+  }, []);
+
+  async function onFetchUpdateAsync() {
+    try {
+      const update = await Updates.checkForUpdateAsync();
+
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
+      }
+    } catch (error) { }
+  }
 
   useEffect(() => {
     if (loaded) {

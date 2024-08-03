@@ -36,7 +36,7 @@ export const removeData = async (key: string) => {
 };
 
 export const getDate = (date: string) => {
-  return date.split("T")[0];
+  return date?.split("T")[0];
 };
 
 export const getTime = (date: string) => {
@@ -78,3 +78,19 @@ export const printReceipt = async (text: string) => {
     printerNbrCharactersPerLine: 32,
   });
 };
+
+export function formatNumberExtended(number: number) {
+  const absNumber = Math.abs(number);
+
+  if (absNumber >= 1_000_000_000_000) {
+    return (number / 1_000_000_000_000).toFixed(1).replace(/\.0$/, "") + "T";
+  } else if (absNumber >= 1_000_000_000) {
+    return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B";
+  } else if (absNumber >= 1_000_000) {
+    return (number / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  } else if (absNumber >= 1_000) {
+    return (number / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  } else {
+    return number?.toString();
+  }
+}

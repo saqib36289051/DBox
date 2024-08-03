@@ -23,7 +23,21 @@ export const transactionApi = createApi({
             }),
             providesTags: ["Transaction"]
         }),
+        getTransactionTotals: builder.query({
+            query: () => ({
+                url: '/transaction-totals/',
+                method: 'GET',
+            }),
+            providesTags: ["Transaction"]
+        }),
+        getTransactionGraphData: builder.query({
+            query: () => ({
+                url: '/transaction-graph-data/',
+                method: 'GET',
+            }),
+            providesTags: ["Transaction"]
+        }),
     }),
 });
 
-export const { useTransactionMutation, useGetTransactionsQuery } = transactionApi;
+export const { useTransactionMutation, useGetTransactionsQuery, useGetTransactionTotalsQuery,useGetTransactionGraphDataQuery } = transactionApi;

@@ -70,7 +70,7 @@ const Login = (props: Props) => {
     <View className="flex-1 bg-white justify-around">
       <View className="flex h-1/3 items-center justify-center">
         <Image
-          source={require('../assets/images/icon.png')}
+          source={require('../assets/images/login-icon.png')}
           resizeMode='contain'
           style={{ width: 120, height: 120 }}
         />

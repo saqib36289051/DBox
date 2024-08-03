@@ -27,8 +27,24 @@ export default function TabLayout() {
         headerShown: false,
         tabBarHideOnKeyboard: true,
       }}>
+
       <Tabs.Screen
         name="index"
+        options={{
+          title: 'Dashboard',
+          tabBarIcon: ({ color, focused }) => (
+            <DashboardIcon
+              width={36}
+              height={36}
+              strokeWidth={3}
+              stroke={focused ? Colors[colorScheme ?? 'light'].tint : color}
+              fill={focused ? Colors[colorScheme ?? 'light'].tint : color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="transaction"
         options={{
           title: 'Transactions',
           tabBarIcon: ({ color, focused }) => (
@@ -86,7 +102,6 @@ export default function TabLayout() {
       <Tabs.Screen
         name="setting"
         options={{
-          href: null,
           title: 'Settings',
           tabBarIcon: ({ color, focused }) => (
             <Setting

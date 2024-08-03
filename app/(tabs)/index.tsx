@@ -1,123 +1,117 @@
-import React, { useEffect } from 'react';
-import LayoutContainer from '@/components/container/LayoutContainer';
-import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme, RefreshControl, Alert } from 'react-native';
-import Input from '@/components/ui/Input';
-import { Feather } from '@expo/vector-icons';
-import { useState } from 'react';
-import ListItemCard from '@/components/dashboard/ListItemCard';
-import ListHeader from '@/components/dashboard/ListHeader';
-import ListFooter from '@/components/dashboard/ListFooter';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native'
+import React from 'react'
+import LayoutContainer from '@/components/container/LayoutContainer'
+import Label from '@/components/ui/Label'
+import { useGetTransactionGraphDataQuery, useGetTransactionsQuery, useGetTransactionTotalsQuery } from '@/store/services/transactionApi'
+import { AntDesign, FontAwesome, FontAwesome5, FontAwesome6, Ionicons } from '@expo/vector-icons'
+import { LineChart } from 'react-native-gifted-charts'
+import { formatNumberExtended, getDate, getTime } from '@/utils/utils'
 
-import * as Print from 'expo-print';
-import * as Sharing from 'expo-sharing';
-import Button from '@/components/ui/Button';
-import TransactionIcon from '@/components/navigation/TransactionIcon';
-import { useRouter } from 'expo-router';
-import { Colors } from '@/constants/Colors';
-import { useGetTransactionsQuery } from '@/store/services/transactionApi';
-import { printReceipt } from '@/utils/utils';
+type Props = {}
 
+const DashboardScreen = (props: Props) => {
+  const { data, isSuccess, isLoading, refetch, isFetching } = useGetTransactionTotalsQuery({})
+  const { data: graph = {}, isLoading: isLoadingGraph } = useGetTransactionGraphDataQuery({})
+  const { data: transactionList = {} } = useGetTransactionsQuery({})
+  // i want to get the array of first 4 elements form the trasactionList
 
-const html = `
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-  </head>
-  <body style="text-align: center;">
-    <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
-      Hello Expo!
-    </h1>
-    <img
-      src="https://d30j33t1r58ioz.cloudfront.net/static/guides/sdk.png"
-      style="width: 90vw;" />
-  </body>
-</html>
-`;
+  const ffElementList = transactionList?.results?.slice(0, 3)
 
-export default function HomeScreen() {
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState(search);
-  const { data, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({
-    search: debouncedSearch
-  })
-  const router = useRouter()
-  const colorScheme = useColorScheme()
-
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setDebouncedSearch(search);
-      refetch({ force: true })
-    }, 500)
-
-    return () => clearTimeout(timerId);
-  }, [search]);
-
-  const handleSearch = (value: string) => {
-    setSearch(value);
-  };
-
-  const handlePdfView = async (name: string, mobile_number: string, amount: number, donation_type: string) => {
-    const text =
-      "[C]<u><font size='big'>JAMIA NIZAM-E-MUSTAFA</font></u>\n" +
-      "[L]\n" +
-      `[L]<b>NAME:</b>[R]${name}\n` +
-      `[L]<b>MOBILE:</b>[R]${mobile_number}\n` +
-      `[L]<b>Donation:</b>[R]${amount}\n` +
-      `[L]<b>Collection Mode:</b>[R]${donation_type}\n` +
-      "[L]\n" +
-      `[L]<b><u>Jamia Niazame Mustafa</u></b> will use your funds wherever it deems fit for religious and charitable purposes.\n` +
-      "[C]<qrcode size='20'>JAMIA NIZAM-E-MUSTAFA</qrcode>";
-    await printReceipt(text)
-  };
-
+  const { width, height } = useWindowDimensions()
+  const formattedData = graph?.line_data?.map((item) => ({
+    value: item?.value,
+    label: item?.label?.slice(0, 2)
+  }))
   return (
     <LayoutContainer>
-      <View className='py-1 flex-row gap-2'>
-        <View className='flex-1'>
-          <Input
-            icon={<Feather name="search" size={24} color={Colors[colorScheme ?? 'light'].icon} />}
-            placeholder='Search for transaction'
-            onChangeText={(e) => handleSearch(e)}
-            value={search}
-          />
+      <View className="flex-row gap-2  w-full">
+        <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
+          <AntDesign name="calendar" size={24} color="green" />
+          <Label type='sm' weight='bold' >Current Month Calc.</Label>
+          <Label type='h3' weight='medium' >{formatNumberExtended(data?.current_month_total)}</Label>
         </View>
-        <Button className='bg-green-700 py-1 px-2' iconBtn={<TransactionIcon width={38} height={38} />} onPress={() => router.navigate("/form/addTransaction")} />
+        <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
+          <FontAwesome name="calendar-check-o" size={24} color="green" />
+          <Label type='sm' weight='bold' >Previous Month Calc.</Label>
+          <Label type='h3' weight='medium' >{formatNumberExtended(data?.previous_month_total)}</Label>
+        </View>
       </View>
-      <FlatList
-        data={data?.results}
-        keyExtractor={(item, index) => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => <ListItemCard handlePdfPrint={handlePdfView} handlePdfShare={handlePdfView} {...item} />}
-        ListHeaderComponent={<ListHeader />}
-        ListFooterComponent={<ListFooter />}
-        style={{
-          // marginBottom: 50,
-          height: '100%'
-        }}
-        refreshControl={<RefreshControl
-          refreshing={isFetching}
-          onRefresh={refetch}
-        />
-        }
-      />
+      <View className="flex-row gap-2  w-full mt-1">
+        <View className='flex-1 rounded bg-white shadow-sm p-2 justify-around'>
+          <FontAwesome5 name="file-pdf" size={48} color="green" />
+          <Label type='sm' weight='bold' >Download Pdf Report</Label>
+        </View>
+        <View>
+          <View className='flex rounded bg-white shadow-sm p-2 mb-1'>
+            <Ionicons name="add" size={24} color="green" />
+            <Label type='xs' weight='medium' >Add New Box</Label>
+          </View>
 
-    </LayoutContainer>
-  );
+          <View className='flex rounded bg-white shadow-sm p-2'>
+            <FontAwesome6 name="money-bill-transfer" size={24} color="green" />
+            <Label type='xs' weight='medium' >Add New Transaction</Label>
+          </View>
+        </View>
+      </View>
+      <View
+        style={{ width: width - 40 }}
+        className="mt-3 bg-white rounded shadow-sm p-2">
+        <Label type='sm' weight='bold' className='mb-3' >Weekly Transaction Graph</Label>
+        {
+          isLoadingGraph && <ActivityIndicator color={'green'} size={'large'} />
+
+        }
+        {
+          formattedData?.length > 0 &&
+          <LineChart
+            data={formattedData}
+            width={width - 110}
+            curved
+            initialSpacing={6}
+            color="green"
+            dataPointsColor={'darkgreen'}
+            yAxisColor="green"
+            xAxisColor={'green'}
+            yAxisTextStyle={{ color: 'darkgreen' }}
+            xAxisLabelTextStyle={{ color: 'darkgreen' }}
+            hideRules
+          />
+        }
+      </View>
+
+      <View className="mt-5">
+        <View className='flex-row justify-between mb-1'>
+          <Label type='sm' weight='bold'>Recent Transactions</Label>
+          <View className='flex-row gap-x-2 items-center mr-4'>
+            <Label type='sm' weight='bold'>See All</Label>
+            <FontAwesome6 name="arrow-right-long" size={16} color="green" />
+          </View>
+        </View>
+
+        {
+          ffElementList?.map((i, index) => (
+            <View key={i?.id} className={`${index == 1 ? 'bg-sky-200' : 'bg-green-200'} rounded-md p-2 my-1 flex-row justify-between`}>
+              <View>
+                <Label type='sm' weight='medium' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>{i?.name}</Label>
+                <View className='flex-row gap-x-2'>
+                  <Label type='xs' weight='regular' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>{getDate(i?.created_at)}</Label>
+                  <Label type='xs' weight='regular' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>{getTime(i?.created_at)}</Label>
+                </View>
+              </View>
+              <View className="w-1/4 items-center">
+                <View className={`${index == 1 ? "bg-sky-400" : "bg-green-400"} rounded-full w-full flex items-center justify-center h-5`}>
+                  <Label type='xs' weight='regular' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>Rs. {i?.amount}</Label>
+                </View>
+                <Label type='xs' weight='medium' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>Type. {i?.donation_type}</Label>
+              </View>
+            </View>
+          ))
+        }
+
+
+      </View>
+    </LayoutContainer >
+  )
 }
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-    flexDirection: 'column',
-    padding: 8,
-  },
-  spacer: {
-    height: 8,
-  },
-  printer: {
-    textAlign: 'center',
-  },
-});
+export default DashboardScreen
