@@ -90,19 +90,54 @@ const DashboardScreen = (props: Props) => {
 
         {
           ffElementList?.map((i, index) => (
-            <View key={i?.id} className={`${index == 1 ? 'bg-sky-200' : 'bg-green-200'} rounded-md p-2 my-1 flex-row justify-between`}>
+            <View key={i?.id}
+              className={`${index == 1
+                ? 'bg-sky-200'
+                : index == 2
+                  ? "bg-red-200"
+                  : 'bg-green-200'} rounded-md p-2 my-1 flex-row justify-between`}>
               <View>
-                <Label type='sm' weight='medium' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>{i?.name}</Label>
+                <Label type='sm' weight='medium'
+                  className={`${index == 1
+                    ? 'text-sky-700'
+                    : index == 2
+                      ? 'text-red-700 '
+                      : 'text-green-700'}`}>{i?.name}</Label>
                 <View className='flex-row gap-x-2'>
-                  <Label type='xs' weight='regular' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>{getDate(i?.created_at)}</Label>
-                  <Label type='xs' weight='regular' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>{getTime(i?.created_at)}</Label>
+                  <Label type='xs' weight='regular'
+                    className={`${index == 1
+                      ? 'text-sky-700'
+                      : index == 2
+                        ? 'text-red-700 '
+                        : 'text-green-700'}`}>{getDate(i?.created_at)}</Label>
+                  <Label type='xs' weight='regular'
+                    className={`${index == 1
+                      ? 'text-sky-700'
+                      : index == 2
+                        ? 'text-red-700 '
+                        : 'text-green-700'}`}>{getTime(i?.created_at)}</Label>
                 </View>
               </View>
               <View className="w-1/4 items-center">
-                <View className={`${index == 1 ? "bg-sky-400" : "bg-green-400"} rounded-full w-full flex items-center justify-center h-5`}>
-                  <Label type='xs' weight='regular' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>Rs. {i?.amount}</Label>
+                <View
+                  className={`${index == 1
+                    ? 'bg-sky-400'
+                    : index == 2
+                      ? 'bg-red-400 '
+                      : 'bg-green-400'} rounded-full w-full flex items-center justify-center h-5`}>
+                  <Label type='xs' weight='regular'
+                    className={`${index == 1
+                      ? 'text-sky-700'
+                      : index == 2
+                        ? 'text-red-700 '
+                        : 'text-green-700'}`}>Rs. {i?.amount}</Label>
                 </View>
-                <Label type='xs' weight='medium' className={`${index == 1 ? 'text-sky-700' : 'text-green-700'}`}>Type. {i?.donation_type}</Label>
+                <Label type='xs' weight='medium'
+                  className={`${index == 1
+                    ? 'text-sky-700'
+                    : index == 2
+                      ? 'text-red-700 '
+                      : 'text-green-700'}`}>Type. {i?.donation_type}</Label>
               </View>
             </View>
           ))
