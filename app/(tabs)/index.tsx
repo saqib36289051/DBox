@@ -1,5 +1,5 @@
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import LayoutContainer from '@/components/container/LayoutContainer'
 import Label from '@/components/ui/Label'
 import { useGetDownloadReportMutation, useGetTransactionGraphDataQuery, useGetTransactionsQuery, useGetTransactionTotalsQuery } from '@/store/services/transactionApi'
@@ -13,27 +13,30 @@ type Props = {}
 
 const DashboardScreen = (props: Props) => {
   const { data, isSuccess, isLoading, refetch, isFetching } = useGetTransactionTotalsQuery({})
-  const { data: graph = {}, isLoading: isLoadingGraph } = useGetTransactionGraphDataQuery({})
+  const { data: graph = {}, isLoading: isLoadingGraph, refetch: graphDataRefetch } = useGetTransactionGraphDataQuery({})
   const [getDownloadReport, { isLoading: isDownloading }] = useGetDownloadReportMutation();
-
-  const { data: transactionList = {} } = useGetTransactionsQuery({})
+  const { data: transactionList = {}, refetch: transactionListLatest } = useGetTransactionsQuery({})
+  const { width, height } = useWindowDimensions()
   const router = useRouter()
-  const ffElementList = transactionList?.results?.slice(0, 3)
   const user = useAuthHook()
 
-  const { width, height } = useWindowDimensions()
+  const ffElementList = transactionList?.results?.slice(0, 3)
+
   const formattedData = graph?.line_data?.map((item) => ({
     value: item?.value,
     label: item?.label?.slice(0, 2)
   }))
 
+  useEffect(() => {
+    refetch()
+    graphDataRefetch()
+    transactionListLatest()
+  }, [])
+
   const downloadPdfReport = async () => {
     // const { start, end } = getCurrentMonthStartAndEnd()
-
     // const res = await getDownloadReport()?.unwrap()
-
     // // download pdf report
-
     // console.log("🚀 ~ downloadPdfReport ~ res:", res)
   }
   return (

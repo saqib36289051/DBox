@@ -21,7 +21,7 @@ export const transactionApi = createApi({
                 method: 'GET',
                 params: filters
             }),
-            providesTags: ["Transaction"]
+            providesTags: ["Transaction"],
         }),
         getTransactionTotals: builder.query({
             query: () => ({
@@ -41,7 +41,7 @@ export const transactionApi = createApi({
             query: () => ({
                 url: '/download-report/',
                 method: 'GET',
-                responseHandler: (response) => response.blob(), 
+                responseHandler: (response) => response.blob(),
             }),
         }),
     }),
