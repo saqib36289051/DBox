@@ -37,7 +37,14 @@ export const transactionApi = createApi({
             }),
             providesTags: ["Transaction"]
         }),
+        getDownloadReport: builder.mutation({
+            query: () => ({
+                url: '/download-report/',
+                method: 'GET',
+                responseHandler: (response) => response.blob(), 
+            }),
+        }),
     }),
 });
 
-export const { useTransactionMutation, useGetTransactionsQuery, useGetTransactionTotalsQuery,useGetTransactionGraphDataQuery } = transactionApi;
+export const { useTransactionMutation, useGetTransactionsQuery, useGetTransactionTotalsQuery, useGetTransactionGraphDataQuery, useGetDownloadReportMutation } = transactionApi;

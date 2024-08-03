@@ -94,3 +94,35 @@ export function formatNumberExtended(number: number) {
     return number?.toString();
   }
 }
+
+export function getCurrentMonthStartAndEnd() {
+  const currentDate = new Date();
+
+  const startOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+  );
+
+  const endOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    0
+  );
+
+  const startFormatted = formateDateOfStartAndEndDate(startOfMonth);
+  const endFormatted = formateDateOfStartAndEndDate(endOfMonth);
+
+  return {
+    start: startFormatted,
+    end: endFormatted,
+  };
+}
+
+const formateDateOfStartAndEndDate = (date: Date) => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+};

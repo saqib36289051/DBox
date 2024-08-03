@@ -48,6 +48,18 @@ const customBaseQuery = (baseUrl) => {
       }
     }
 
+    if (result.data instanceof Blob) {
+      return { data: result.data };
+    }
+
+    if (
+      result?.data &&
+      result?.data?.type &&
+      result?.data?.type !== "application/json"
+    ) {
+      return { data: result.data };
+    }
+
     return result;
   };
 };
