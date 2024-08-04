@@ -51,6 +51,7 @@ const AddBox = (props: Props) => {
     }],
     image: null
   })
+  console.log("🚀 ~ const[state,dispatch]=useReducer ~ state:", state)
 
   async function addBox() {
     if (!validation()) {
@@ -119,8 +120,7 @@ const AddBox = (props: Props) => {
     if (state.complete_address === '') {
       error.complete_address = 'Complete Address is required'
     }
-
-    if (typeof state.gender === 'object') {
+    if (!state.gender.find(g => g.isChecked === true)) {
       error.gender = 'Select Gender'
     }
 
