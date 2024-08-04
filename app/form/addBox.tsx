@@ -51,7 +51,6 @@ const AddBox = (props: Props) => {
     }],
     image: null
   })
-  console.log("🚀 ~ const[state,dispatch]=useReducer ~ state:", state)
 
   async function addBox() {
     if (!validation()) {
