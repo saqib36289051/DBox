@@ -49,7 +49,7 @@ const DonationListItem: React.FC<Props> = ({
                     {name}
                 </Label>
                 <View className='flex mt-2 space-y-1'>
-                    <View className="flex-row space-x-2 items-center">
+                    {/* <View className="flex-row space-x-2 items-center">
                         <Label
                             type="xs"
                             weight="medium"
@@ -59,7 +59,7 @@ const DonationListItem: React.FC<Props> = ({
                         </Label>
                         <Label type='xs' weight='regular' className={`${status === 'Active' ? 'text-green-600' : 'text-yellow-600'}`}>{status}</Label>
 
-                    </View>
+                    </View> */}
                     <View className="flex-row space-x-2 items-center">
                         <Label
                             type="xs"
@@ -71,15 +71,15 @@ const DonationListItem: React.FC<Props> = ({
                         <Label type='xs' weight='regular' className={'text-gray-600'}>{city}</Label>
 
                     </View>
-                    <View className="flex-row space-x-2 items-center">
+                    <View className="gap-y-1">
                         <Label
                             type="xs"
                             weight="medium"
                             className='text-gray-600'
                         >
-                            Address:
+                            Address
                         </Label>
-                        <Label type='xs' weight='regular' className={'text-gray-600'}>{complete_address}</Label>
+                        <Label type='xs' weight='regular' className={'text-gray-600 basis[80%] flex-wrap flex-1'}>{complete_address}</Label>
 
                     </View>
                 </View>

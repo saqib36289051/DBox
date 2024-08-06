@@ -101,16 +101,19 @@ const ListItemCard: React.FC<Props> = ({
                                 <Label type='xs' weight='regular' className={'text-gray-600'}>{city}</Label>
 
                             </View>
-                            <View className="flex-row space-x-2 items-center">
-                                <Entypo name="address" size={14} color="rgb(21,128,61)" />
-                                <Label
-                                    type="xs"
-                                    weight="medium"
-                                    className='text-gray-600'
-                                >
-                                    Address:
-                                </Label>
-                                <Label type='xs' weight='regular' className={'text-gray-600'}>{complete_address}</Label>
+                            <View className="gap-y-1">
+                                <View className='flex-row space-x-1'>
+
+                                    <Entypo name="address" size={14} color="rgb(21,128,61)" />
+                                    <Label
+                                        type="xs"
+                                        weight="medium"
+                                        className='text-gray-600'
+                                    >
+                                        Address
+                                    </Label>
+                                </View>
+                                <Label type='xs' weight='regular' className={'text-gray-600 basis[80%] flex-wrap flex-1'}>{complete_address}</Label>
 
                             </View>
                         </>

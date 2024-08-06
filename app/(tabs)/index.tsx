@@ -65,12 +65,12 @@ const DashboardScreen = (props: Props) => {
             <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
               <AntDesign name="calendar" size={24} color="green" />
               <Label type='sm' weight='bold' >Current Month Calc.</Label>
-              <Label type='h5' weight='medium' >{formatNumberExtended(data?.current_month_total)}</Label>
+              <Label type='h6' weight='medium' >Rs. {data?.current_month_total}</Label>
             </View>
             <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
               <FontAwesome name="calendar-check-o" size={24} color="green" />
               <Label type='sm' weight='bold' >Previous Month Calc.</Label>
-              <Label type='h5' weight='medium' >{formatNumberExtended(data?.previous_month_total)}</Label>
+              <Label type='h6' weight='medium' >Rs. {data?.previous_month_total}</Label>
             </View>
           </View>
           <View className="flex-row gap-2  w-full mt-[0.5]">
