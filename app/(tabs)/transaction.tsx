@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import LayoutContainer from '@/components/container/LayoutContainer';
-import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme, RefreshControl, Alert } from 'react-native';
+import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme, RefreshControl, Alert, Pressable, ActivityIndicator } from 'react-native';
 import Input from '@/components/ui/Input';
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
@@ -16,7 +16,8 @@ import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { useGetTransactionsQuery } from '@/store/services/transactionApi';
 import { printReceipt } from '@/utils/utils';
-
+import { TransactionListType } from '@/constants/Types';
+import Label from '@/components/ui/Label';
 
 const html = `
 <html>
@@ -36,25 +37,45 @@ const html = `
 
 export default function TransactionScreen() {
     const [search, setSearch] = useState('');
+    const [page, setPage] = useState(1);
     const [debouncedSearch, setDebouncedSearch] = useState(search);
+    const [transactions, setTransactions] = useState<TransactionListType[]>([]);
     const { data, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({
+        page: page,
+        page_size: 20,
         search: debouncedSearch
     })
     const router = useRouter()
     const colorScheme = useColorScheme()
 
+    console.log("🚀 ~ TransactionScreen ~ data:", page, transactions)
+    useEffect(() => {
+        if (data?.results) {
+            setTransactions((prevTransactions) =>
+                page === 1 ? data?.results : [...prevTransactions, ...data?.results]
+            );
+        }
+    }, [data]);
+
     useEffect(() => {
         const timerId = setTimeout(() => {
             setDebouncedSearch(search);
-            refetch({ force: true })
-        }, 500)
-
+            setPage(1);
+            refetch();
+        }, 500);
         return () => clearTimeout(timerId);
     }, [search]);
 
     const handleSearch = (value: string) => {
         setSearch(value);
     };
+
+    const handlePagination = () => {
+        if (!isFetching && data && data?.results && transactions?.length < data?.count) {
+            setPage((prevPage) => prevPage + 1);
+        }
+    };
+
 
     const handlePdfView = async (name: string, mobile_number: string, amount: number, donation_type: string) => {
         const text =
@@ -84,14 +105,25 @@ export default function TransactionScreen() {
                 <Button className='bg-green-700 py-1 px-2' iconBtn={<TransactionIcon width={38} height={38} />} onPress={() => router.navigate("/form/addTransaction")} />
             </View>
             <FlatList
-                data={data?.results}
+                data={transactions}
                 keyExtractor={(item, index) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => <ListItemCard handlePdfPrint={handlePdfView} handlePdfShare={handlePdfView} {...item} />}
                 ListHeaderComponent={<ListHeader />}
-                ListFooterComponent={<ListFooter />}
+                ListFooterComponent={
+                    isLoading || isFetching ? <ActivityIndicator color={'green'} size={'small'} />
+                        : transactions?.length >= data?.count ?
+                            <ListFooter />
+                            : <Pressable
+                                className='flex self-center items-center justify-center my-2 px-2 bg-green-700 py-1 rounded'
+                                onPress={handlePagination}>
+                                <Label type='xs' weight='medium' className='text-white'>
+                                    Load More
+                                </Label>
+                            </Pressable>
+                }
+
                 style={{
-                    // marginBottom: 50,
                     height: '100%'
                 }}
                 refreshControl={<RefreshControl
@@ -99,6 +131,10 @@ export default function TransactionScreen() {
                     onRefresh={refetch}
                 />
                 }
+                initialNumToRender={20}
+                maxToRenderPerBatch={20}
+                windowSize={6}
+                removeClippedSubviews={Platform.OS === 'android'}
             />
 
         </LayoutContainer>

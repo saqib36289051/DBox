@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, Platform, Pressable, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { memo } from 'react'
 import Label from '@/components/ui/Label';
 import { getDate, getFirstLetters, getTime } from '@/utils/utils';
 import Badge from '@/components/ui/Badge';
@@ -113,7 +113,7 @@ const ListItemCard: React.FC<Props> = ({
                                         Address
                                     </Label>
                                 </View>
-                                <Label type='xs' weight='regular' className={'text-gray-600 basis[80%] flex-wrap flex-1'}>{complete_address}</Label>
+                                <Label type='xs' weight='regular' className={'text-gray-600 max-w-[95%]'}>{complete_address}</Label>
 
                             </View>
                         </>
@@ -168,7 +168,7 @@ const ListItemCard: React.FC<Props> = ({
     )
 }
 
-export default ListItemCard
+export default memo(ListItemCard)
 
 const styles = StyleSheet.create({
     card: {
