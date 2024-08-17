@@ -25,23 +25,6 @@ export type GenderListType = {
   isChecked: boolean;
 };
 
-// {
-//   "id": "782976db-a567-428a-ac00-f49cda1a7800",
-//   "created_at": "2024-08-07T13:17:30.087991Z",
-//   "updated_at": "2024-08-07T13:17:30.088004Z",
-//   "mobile_number": "03013852348",
-//   "name": "Abdul Qadeer",
-//   "province": null,
-//   "city": "Mianwali",
-//   "area": null,
-//   "complete_address": "Thati shareef mianwali",
-//   "gender": null,
-//   "donation_type": "BOX",
-//   "amount": 460,
-//   "user": "7df65a94-a303-446f-a03c-8f0b648ae3af",
-//   "box": "f978a86f-3b3b-4adf-a1ba-e0f1abede99e"
-// },
-
 export type TransactionListType = {
   id: string;
   created_at: string;
@@ -57,4 +40,11 @@ export type TransactionListType = {
   amount: number;
   user: string;
   box: string;
+};
+
+
+export type MenuItemType = {
+  label: string;
+  icon: React.ReactNode;
+  onPress: () => void;
 };

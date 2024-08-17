@@ -3,11 +3,12 @@ import React, { useEffect } from 'react'
 import LayoutContainer from '@/components/container/LayoutContainer'
 import Label from '@/components/ui/Label'
 import { useGetDownloadReportMutation, useGetTransactionGraphDataQuery, useGetTransactionsQuery, useGetTransactionTotalsQuery } from '@/store/services/transactionApi'
-import { AntDesign, FontAwesome, FontAwesome5, FontAwesome6, Ionicons } from '@expo/vector-icons'
+import { AntDesign, Feather, FontAwesome, FontAwesome5, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { LineChart } from 'react-native-gifted-charts'
 import { formatNumberExtended, getCurrentMonthStartAndEnd, getDate, getTime } from '@/utils/utils'
 import { Slot, useRouter } from 'expo-router'
 import useAuthHook from '@/hooks/useAuthHook'
+import TopBar from '@/components/ui/TopBar'
 
 type Props = {}
 
@@ -33,66 +34,59 @@ const DashboardScreen = (props: Props) => {
     transactionListLatest()
   }, [])
 
-  const downloadPdfReport = async () => {
-    // const { start, end } = getCurrentMonthStartAndEnd()
-    // const res = await getDownloadReport()?.unwrap()
-    // // download pdf report
-    // console.log("🚀 ~ downloadPdfReport ~ res:", res)
-  }
+  const downloadPdfReport = async () => { }
+
+  const menuItems = [
+    {
+      label: 'Download Report',
+      icon: <FontAwesome name="file-pdf-o" size={16} color="green" />,
+      onPress: () => router.push('/download-report')
+    },
+    {
+      label: 'About Us',
+      icon: <Feather name="info" size={16} color="green" />,
+      onPress: () => router.push('/download-report')
+    },
+  ]
+
   return (
     <>
-      <View
-        style={{
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-        }}
-        className=' h-[94px] w-full bg-white px-4'>
-        <Image source={require("@/assets/images/print-line-logo.png")}
-          style={{ width: 160, resizeMode: "contain", marginTop: 20 }}
-        />
-      </View>
+      <TopBar isShowMenu={true} menuItems={menuItems} />
       <ScrollView
         showsVerticalScrollIndicator={false}
       >
         <View className='pt-3 px-3'>
-          <View className="flex-row gap-2  w-full">
+          <View className="flex-row gap-2 gap-x-2  w-full">
             <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
-              <AntDesign name="calendar" size={24} color="green" />
-              <Label type='sm' weight='bold' >Current Month Calc.</Label>
-              <Label type='h6' weight='medium' >Rs. {data?.current_month_total}</Label>
+              <AntDesign name="calendar" size={16} color="orange" />
+              <Label type='xs' weight='medium' >Current Month Calc.</Label>
+              <Label type='sm' weight='bold' >Rs. {data?.current_month_total}</Label>
             </View>
             <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
-              <FontAwesome name="calendar-check-o" size={24} color="green" />
-              <Label type='sm' weight='bold' >Previous Month Calc.</Label>
-              <Label type='h6' weight='medium' >Rs. {data?.previous_month_total}</Label>
+              <Ionicons name="calendar-number-outline" size={16} color="orange" />
+              <Label type='xs' weight='medium' >Previous Month Calc.</Label>
+              <Label type='sm' weight='bold' >Rs. {data?.previous_month_total}</Label>
             </View>
           </View>
-          <View className="flex-row gap-2  w-full mt-[0.5]">
-            <Pressable
-              onPress={() => downloadPdfReport()}
-              className='flex-1 rounded bg-white shadow-sm p-2 justify-around'>
-              <FontAwesome5 name="file-pdf" size={48} color="green" />
-              <Label type='sm' weight='bold' >Download Pdf Report</Label>
-            </Pressable>
+          <View className="flex-row gap-1 gap-x-2  w-full mt-1">
+            <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
+              <Ionicons name="today-outline" size={16} color="green" />
+              <Label type='xs' weight='medium' >Today Calculation</Label>
+              <Label type='h6' weight='bold'>Rs. {data?.daily_total}</Label>
+            </View>
             <View>
               <Pressable
                 onPress={() => router.navigate("/form/addBox")}
                 className='flex rounded bg-white shadow-sm p-2 mb-1'>
-                <Ionicons name="add" size={24} color="green" />
-                <Label type='xs' weight='medium' >Add New Box</Label>
+                <Ionicons name="add" size={16} color="green" />
+                <Label type='xs' weight='regular' >Add New Box</Label>
               </Pressable>
 
               <Pressable
                 onPress={() => router.navigate("/form/addTransaction")}
                 className='flex rounded bg-white shadow-sm p-2'>
-                <FontAwesome6 name="money-bill-transfer" size={24} color="green" />
-                <Label type='xs' weight='medium' >Add New Transaction</Label>
+                <FontAwesome6 name="money-bill-transfer" size={16} color="green" />
+                <Label type='xs' weight='regular' >Add New Transaction</Label>
               </Pressable>
             </View>
           </View>
