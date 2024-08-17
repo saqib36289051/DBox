@@ -3,12 +3,11 @@ import LayoutContainer from '@/components/container/LayoutContainer';
 import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme, RefreshControl, Alert, Pressable, ActivityIndicator } from 'react-native';
 import Input from '@/components/ui/Input';
 import { Feather } from '@expo/vector-icons';
+import _ from 'lodash';
 import { useState } from 'react';
 import ListItemCard from '@/components/dashboard/ListItemCard';
 import ListHeader from '@/components/dashboard/ListHeader';
 import ListFooter from '@/components/dashboard/ListFooter';
-
-import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import Button from '@/components/ui/Button';
 import TransactionIcon from '@/components/navigation/TransactionIcon';
@@ -36,43 +35,50 @@ const html = `
 `;
 
 export default function TransactionScreen() {
+    const [data, setData] = useState<TransactionListType[]>([])
+    const [bottomLoader, setBottomLoader] = useState(false)
+    const [totalCount, setTotalCount] = useState(0)
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
-    const [debouncedSearch, setDebouncedSearch] = useState(search);
-    const [transactions, setTransactions] = useState<TransactionListType[]>([]);
-    const { data, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({
+    const { data: initialData, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({
         page: page,
         page_size: 20,
-        search: debouncedSearch
+        search: search
     })
     const router = useRouter()
     const colorScheme = useColorScheme()
 
-    console.log("🚀 ~ TransactionScreen ~ data:", page, transactions)
     useEffect(() => {
-        if (data?.results) {
-            setTransactions((prevTransactions) =>
-                page === 1 ? data?.results : [...prevTransactions, ...data?.results]
-            );
+        if (initialData) {
+            if (page === 1) {
+                setData(initialData?.results);
+            } else {
+                setData((prevItems) => [...prevItems, ...initialData.results]);
+            }
+            setTotalCount(initialData?.count);
         }
-    }, [data]);
+    }, [initialData]);
 
-    useEffect(() => {
-        const timerId = setTimeout(() => {
-            setDebouncedSearch(search);
-            setPage(1);
-            refetch();
-        }, 500);
-        return () => clearTimeout(timerId);
-    }, [search]);
+    const debouncedSearch = React.useCallback(
+        _.debounce((searchQuery: string) => handleSearch(searchQuery), 500),
+        []
+    );
 
-    const handleSearch = (value: string) => {
-        setSearch(value);
+    const handleSearch = (searchQuery: string) => {
+        setPage(1);
+        setSearch(searchQuery);
+        refetch();
     };
 
-    const handlePagination = () => {
-        if (!isFetching && data && data?.results && transactions?.length < data?.count) {
-            setPage((prevPage) => prevPage + 1);
+    const handleReachedEnd = () => {
+        if (data.length >= totalCount) {
+            return;
+        } else {
+            if (!isFetching) {
+                setBottomLoader(true);
+                setPage((prevPage) => prevPage + 1);
+                refetch().finally(() => setBottomLoader(false));
+            }
         }
     };
 
@@ -104,28 +110,23 @@ export default function TransactionScreen() {
                 </View>
                 <Button className='bg-green-700 py-1 px-2' iconBtn={<TransactionIcon width={38} height={38} />} onPress={() => router.navigate("/form/addTransaction")} />
             </View>
+            {isFetching || isLoading && <ActivityIndicator className="mt-4" color={"green"} />}
             <FlatList
-                data={transactions}
+                data={data}
                 keyExtractor={(item, index) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => <ListItemCard handlePdfPrint={handlePdfView} handlePdfShare={handlePdfView} {...item} />}
                 ListHeaderComponent={<ListHeader />}
-                ListFooterComponent={
-                    isLoading || isFetching ? <ActivityIndicator color={'green'} size={'small'} />
-                        : transactions?.length >= data?.count ?
-                            <ListFooter />
-                            : <Pressable
-                                className='flex self-center items-center justify-center my-2 px-2 bg-green-700 py-1 rounded'
-                                onPress={handlePagination}>
-                                <Label type='xs' weight='medium' className='text-white'>
-                                    Load More
-                                </Label>
-                            </Pressable>
+                ListFooterComponent={<>
+                    {bottomLoader && <ActivityIndicator className="mt-4" color={"green"} />}
+                    {data.length === 0 && !isLoading && !isFetching && <Text className='text-center text-green-700 text-xl mt-4'>No Transaction Found</Text>}
+                </>
                 }
-
                 style={{
                     height: '100%'
                 }}
+                onEndReached={handleReachedEnd}
+                onEndReachedThreshold={0.5}
                 refreshControl={<RefreshControl
                     refreshing={isFetching}
                     onRefresh={refetch}

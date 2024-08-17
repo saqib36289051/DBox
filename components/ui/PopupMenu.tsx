@@ -36,6 +36,7 @@ const PopupMenu = (props: Props) => {
                         {
                             props?.menuItems?.map((item, index) => (
                                 <TouchableOpacity
+                                    onPress={item?.onPress}
                                     style={{
                                         borderBottomWidth: index === props?.menuItems?.length - 1 ? 0 : 1,
                                     }}
