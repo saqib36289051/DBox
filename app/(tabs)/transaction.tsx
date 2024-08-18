@@ -83,19 +83,25 @@ export default function TransactionScreen() {
     // };
 
 
-    const handlePdfView = async (name: string, mobile_number: string, amount: number, donation_type: string) => {
+    const handlePdfView = async (id: string, name: string, mobile_number: string, amount: number, donation_type: string) => {
         const text =
-            "[C]<u><font size='big'>JAMIA NIZAM-E-MUSTAFA</font></u>\n" +
-            "[L]\n" +
+            "[C]-------------------------------[C]\n" +
+            "[C]<b><font size='normal'>JAMIA NIZAM-E-MUSTAFA</font></b>\n" +
+            "[C]<b><font size='normal'>(Registered)</font></b>\n" +
+            "[C]<font size='normal'>Tehsil & Disst: Mianwali</font>\n" +
+            "[C]<font size='normal'>0306-8642243</font>\n" +
+            "[C]<font size='normal'>Email: info@nizamemustafa.com</font>\n" +
+            "[C]-------------------------------[C]\n" +
             `[L]<b>NAME:</b>[R]${name}\n` +
             `[L]<b>MOBILE:</b>[R]${mobile_number}\n` +
             `[L]<b>Donation:</b>[R]${amount}\n` +
             `[L]<b>Collection Mode:</b>[R]${donation_type}\n` +
-            "[L]\n" +
-            `[L]<b><u>Jamia Niazame Mustafa</u></b> will use your funds wherever it deems fit for religious and charitable purposes.\n` +
-            "[C]<qrcode size='20'>JAMIA NIZAM-E-MUSTAFA</qrcode>";
+            "[C]-------------------------------[C]\n" +
+            `[L]<b><u>Jamia Niazame Mustafa</u></b> Aap k channdy ko kisi bhi jaiz, deeni, islahi, rohani aur bhalai k kam mein kharch kia jaye ga\n` +
+            `<qrcode size='20'>JAMIA NIZAM-E-MUSTAFA</qrcode>`
         await printReceipt(text)
     };
+
 
     return (
         <LayoutContainer>
