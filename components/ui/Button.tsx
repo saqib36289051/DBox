@@ -42,7 +42,7 @@ const Button: React.FC<StyledButtonProps> = ({
         isLoading ? <ActivityIndicator color={'#fff'} /> :
           <Text
             className={`text-white font-bold text-base ${textClassName}`}
-            styale={textStyle}>
+            style={textStyle}>
             {title}
           </Text>
       }

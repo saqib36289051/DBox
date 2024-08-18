@@ -39,13 +39,13 @@ const DashboardScreen = (props: Props) => {
   const menuItems = [
     {
       label: 'Download Report',
-      icon: <FontAwesome name="file-pdf-o" size={16} color="green" />,
-      onPress: () => router.push('/download-report')
+      icon: <FontAwesome name="file-pdf-o" size={16} color="red" />,
+      onPress: () => router.push('/reportPdf')
     },
     {
       label: 'About Us',
-      icon: <Feather name="info" size={16} color="green" />,
-      onPress: () => router.push('/download-report')
+      icon: <Feather name="info" size={16} color="red" />,
+      onPress: () => { }
     },
   ]
 

@@ -25,7 +25,7 @@ const PopupMenu = (props: Props) => {
         <>
             <Pressable
                 onPress={() => anim(1)}
-                className="">
+                className="p-2 rounded-full">
                 <AntDesign name="pluscircleo" size={20} color="green" />
             </Pressable>
             <Modal transparent visible={isShow}>

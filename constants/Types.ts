@@ -42,9 +42,18 @@ export type TransactionListType = {
   box: string;
 };
 
-
 export type MenuItemType = {
   label: string;
   icon: React.ReactNode;
   onPress: () => void;
+};
+
+export type MonthlyReportListType = {
+  sr_no: number;
+  created_at: string;
+  name: string;
+  mobile_number: string;
+  city: string;
+  donation_type: string;
+  amount: number;
 };

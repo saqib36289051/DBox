@@ -52,6 +52,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="form" options={{ headerShown: false }} />
+        <Stack.Screen name="reportPdf" options={{ headerShown: false }} />
       </Stack>
     </Provider>
   );
