@@ -48,39 +48,39 @@ export default function TransactionScreen() {
     const router = useRouter()
     const colorScheme = useColorScheme()
 
-    useEffect(() => {
-        if (initialData) {
-            if (page === 1) {
-                setData(initialData?.results);
-            } else {
-                setData((prevItems) => [...prevItems, ...initialData.results]);
-            }
-            setTotalCount(initialData?.count);
-        }
-    }, [initialData]);
+    // useEffect(() => {
+    //     if (initialData) {
+    //         if (page === 1) {
+    //             setData(initialData?.results);
+    //         } else {
+    //             setData((prevItems) => [...prevItems, ...initialData.results]);
+    //         }
+    //         setTotalCount(initialData?.count);
+    //     }
+    // }, [initialData]);
 
-    const debouncedSearch = React.useCallback(
-        _.debounce((searchQuery: string) => handleSearch(searchQuery), 500),
-        []
-    );
+    // const debouncedSearch = React.useCallback(
+    //     _.debounce((searchQuery: string) => handleSearch(searchQuery), 500),
+    //     []
+    // );
 
     const handleSearch = (searchQuery: string) => {
-        setPage(1);
+        // setPage(1);
         setSearch(searchQuery);
         refetch();
     };
 
-    const handleReachedEnd = () => {
-        if (data.length >= totalCount) {
-            return;
-        } else {
-            if (!isFetching) {
-                setBottomLoader(true);
-                setPage((prevPage) => prevPage + 1);
-                refetch().finally(() => setBottomLoader(false));
-            }
-        }
-    };
+    // const handleReachedEnd = () => {
+    //     if (data.length >= totalCount) {
+    //         return;
+    //     } else {
+    //         if (!isFetching) {
+    //             setBottomLoader(true);
+    //             setPage((prevPage) => prevPage + 1);
+    //             refetch().finally(() => setBottomLoader(false));
+    //         }
+    //     }
+    // };
 
 
     const handlePdfView = async (name: string, mobile_number: string, amount: number, donation_type: string) => {
@@ -112,26 +112,26 @@ export default function TransactionScreen() {
             </View>
             {isFetching || isLoading && <ActivityIndicator className="mt-4" color={"green"} />}
             <FlatList
-                data={data}
+                data={initialData?.results}
                 keyExtractor={(item, index) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => <ListItemCard handlePdfPrint={handlePdfView} handlePdfShare={handlePdfView} {...item} />}
                 ListHeaderComponent={<ListHeader />}
-                ListFooterComponent={<>
+                ListFooterComponent={<View className='h-10 flex justify-center items-center mb-4'>
                     {bottomLoader && <ActivityIndicator className="mt-4" color={"green"} />}
                     {data.length === 0 && !isLoading && !isFetching && <Text className='text-center text-green-700 text-xl mt-4'>No Transaction Found</Text>}
-                </>
+                </View>
                 }
                 style={{
                     height: '100%'
                 }}
-                onEndReached={handleReachedEnd}
-                onEndReachedThreshold={0.5}
-                refreshControl={<RefreshControl
-                    refreshing={isFetching}
-                    onRefresh={refetch}
-                />
-                }
+                // onEndReached={handleReachedEnd}
+                // onEndReachedThreshold={0.5}
+                // refreshControl={<RefreshControl
+                //     refreshing={isFetching}
+                //     onRefresh={refetch}
+                // />
+                // }
                 initialNumToRender={20}
                 maxToRenderPerBatch={20}
                 windowSize={6}

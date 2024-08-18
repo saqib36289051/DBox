@@ -36,33 +36,27 @@ const ListItemCard: React.FC<Props> = ({
             ]
             }
             key={id}
-        // className="flex-row space-x-2 border bg-white border-gray-200 my-1 rounded-md px-3 pt-3 pb-1"
         >
-            <View>
-                {
-                    // custodianImg ?
-                    //     <Image
-                    //         className="rounded-full w-12 h-12 object-contain shadow"
-                    //         source={{ uri: custodianImg }} />
-                    //     :
-                    <View className="bg-green-700 w-12 h-12 rounded-full flex items-center justify-center">
-                        <Label type='p' weight='bold' className='text-white'>{getFirstLetters(name)}</Label>
-                    </View>
-                }
-            </View>
-
             <View className='flex-1'>
                 <Label
-                    type="p"
+                    type="sm"
                     weight="medium"
+                    style={{ textDecorationLine: 'underline' }}
                 >
                     {name}
                 </Label>
-                <View className='flex w-[50%] h-[1] bg-slate-400 mt-1'></View>
-                <View className='flex mt-1 space-y-1'>
-
-                    <View className="flex-row space-x-2 items-center">
-                        <MaterialCommunityIcons name="currency-rupee" size={14} color="rgb(21,128,61)" />
+                <View className="flex-row space-x-2 items-center">
+                    <Label
+                        type="xs"
+                        weight="medium"
+                        className='text["rgb(21,128,61)"]'
+                    >
+                        TYPE:
+                    </Label>
+                    <Label type='xs' weight='medium' className={'text["rgb(21,128,61)"]'}>{donation_type}</Label>
+                </View>
+                <View className='flex mt-1'>
+                    <View className="flex-row space-x-2">
                         <Label
                             type="xs"
                             weight="medium"
@@ -71,10 +65,8 @@ const ListItemCard: React.FC<Props> = ({
                             Collected Amount:
                         </Label>
                         <Label type='xs' weight='medium' className={'text-red-600'}>{amount}</Label>
-
                     </View>
-                    <View className="flex-row space-x-2 items-center">
-                        <MaterialCommunityIcons name="clock-time-three-outline" size={14} color="rgb(21,128,61)" />
+                    <View className="flex-row space-x-2">
                         <Label
                             type="xs"
                             weight="medium"
@@ -89,8 +81,8 @@ const ListItemCard: React.FC<Props> = ({
                     </View>
                     {donation_type === Transaction_TYPES.BOX &&
                         <>
-                            <View className="flex-row space-x-2 items-center">
-                                <MaterialCommunityIcons name="map-search" size={12} color="rgb(21,128,61)" />
+                            <View className="flex-row space-x-2">
+
                                 <Label
                                     type="xs"
                                     weight="medium"
@@ -101,33 +93,22 @@ const ListItemCard: React.FC<Props> = ({
                                 <Label type='xs' weight='regular' className={'text-gray-600'}>{city}</Label>
 
                             </View>
-                            <View className="gap-y-1">
-                                <View className='flex-row space-x-1'>
+                            <View className="flex-row space-x-1">
 
-                                    <Entypo name="address" size={14} color="rgb(21,128,61)" />
-                                    <Label
-                                        type="xs"
-                                        weight="medium"
-                                        className='text-gray-600'
-                                    >
-                                        Address
-                                    </Label>
-                                </View>
+
+                                <Label
+                                    type="xs"
+                                    weight="medium"
+                                    className='text-gray-600'
+                                >
+                                    Address
+                                </Label>
                                 <Label type='xs' weight='regular' className={'text-gray-600 max-w-[95%]'}>{complete_address}</Label>
 
                             </View>
                         </>
                     }
-                    <View className="flex-row space-x-2 items-center">
-                        <Label
-                            type="xs"
-                            weight="medium"
-                            className='text["rgb(21,128,61)"]'
-                        >
-                            TYPE:
-                        </Label>
-                        <Label type='xs' weight='medium' className={'text["rgb(21,128,61)"]'}>{donation_type}</Label>
-                    </View>
+
 
                     <View className='flex flex-row justify-end'>
                         <Pressable
@@ -172,22 +153,13 @@ export default memo(ListItemCard)
 
 const styles = StyleSheet.create({
     card: {
-        flexDirection: 'row',
-        columnGap: 8,
+        height: 160,
         marginVertical: 4,
         marginHorizontal: 2,
-        borderRadius: 16,
+        borderRadius: 8,
         paddingVertical: 8,
         paddingHorizontal: 12,
         paddingBottom: 4,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.20,
-        shadowRadius: 16,
-        elevation: 2,
     }
 })
 

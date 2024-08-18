@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button';
 import * as Asset from 'expo-asset';
 import { useGetReportDataQuery } from '@/store/services/transactionApi';
 import { MonthlyReportListType } from '@/constants/Types';
+import Label from '@/components/ui/Label';
 
 type Props = {}
 
@@ -14,7 +15,6 @@ const ReportPdf = (props: Props) => {
   const [pdfUri, setPdfUri] = useState("");
   const [logoBase64, setLogoBase64] = useState<string | null>(null);
   const { data, isFetching, isLoading } = useGetReportDataQuery({})
-  console.log("🚀 ~ ReportPdf ~ data:", data)
 
   useEffect(() => {
     const loadLogo = async () => {
@@ -194,7 +194,10 @@ const ReportPdf = (props: Props) => {
   };
 
   if (isFetching || isLoading) {
-    return <ActivityIndicator size="large" color="green" />
+    return (<View className='flex-1 items-center justify-center'>
+      <ActivityIndicator size="large" color="green" />
+      <Label type='xs' weight='medium' className='text-green-700'>Loading...</Label>
+    </View>)
   }
 
   return (
