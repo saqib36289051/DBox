@@ -1,6 +1,8 @@
-import { ScrollView, StyleSheet, Text, ToastAndroid, useColorScheme, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, ToastAndroid, useColorScheme, View } from 'react-native'
 import React, { useReducer, useState } from 'react'
 import LayoutContainer from '@/components/container/LayoutContainer'
+import * as ImagePicker from 'expo-image-picker';
+import { ImagePickerResult } from 'expo-image-picker';
 import Label from '@/components/ui/Label'
 import CheckboxGroup from '@/components/ui/CheckboxGroup'
 import Input from '@/components/ui/Input'
@@ -9,6 +11,7 @@ import { useRouter } from 'expo-router'
 import { Colors } from '@/constants/Colors'
 import { useBoxMutation } from '@/store/services/boxApi'
 import Button from '@/components/ui/Button'
+
 
 type Props = {}
 
@@ -67,7 +70,15 @@ const AddBox = (props: Props) => {
     if (gender) {
       formData.append("gender", gender)
     }
-    // formData.append('image', state.image)
+    if (state.image) {
+      const uriParts = state.image.split('.');
+      const fileType = uriParts[uriParts.length - 1];
+      formData.append('image', {
+        uri: state.image,
+        name: `photo.${fileType}`,
+        type: `image/${fileType}`,
+      });
+    }
 
     try {
       const res = await box(formData)
@@ -128,6 +139,50 @@ const AddBox = (props: Props) => {
     return !(error.mobile_number || error.name || error.province || error.city || error.area || error.complete_address || error.gender)
   }
 
+  const pickImage = async () => {
+    // Ask the user for permission to access their media library
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to access your photos!");
+      return;
+    }
+
+    // Launch the image picker
+    const result: ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      dispatch({ image: result.assets[0].uri });
+    }
+  };
+
+  const takePhoto = async () => {
+    // Ask the user for permission to access their camera
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to access your camera!");
+      return;
+    }
+
+    // Launch the camera
+    const result: ImagePickerResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      dispatch({ image: result.assets[0].uri });
+    }
+  };
+
+
   return (
     <LayoutContainer>
       <ScrollView
@@ -135,6 +190,15 @@ const AddBox = (props: Props) => {
         className="gap-y-2">
         <View className='h-20 justify-center'>
           <Label weight='medium'>Fill out the form value to collect the donation from the custodian.</Label>
+        </View>
+        <View>
+          {state.image && (
+            <Image
+              source={{ uri: state.image }}
+              style={{ width: 200, height: 200 }}
+            />)}
+          <Button onPress={pickImage} title="Pick an Image from Gallery" />
+          <Button onPress={takePhoto} title="Take a Photo" />
         </View>
         <View>
           <Input
