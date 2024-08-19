@@ -112,7 +112,7 @@ const ListItemCard: React.FC<Props> = ({
 
                     <View className='flex flex-row justify-end'>
                         <Pressable
-                            onPress={() => handlePdfPrint(id?.toString(),name, mobile_number, amount, donation_type)}
+                            onPress={() => handlePdfPrint(id?.toString(), name, mobile_number, amount, donation_type)}
                             style={({ pressed }) => [
                                 {
                                     padding: 8,

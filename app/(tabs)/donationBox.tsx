@@ -1,3 +1,4 @@
+import React from 'react';
 import LayoutContainer from '@/components/container/LayoutContainer';
 import { View, FlatList, useColorScheme, RefreshControl } from 'react-native';
 import Input from '@/components/ui/Input';
