@@ -39,30 +39,28 @@ export default function TransactionScreen() {
     const [bottomLoader, setBottomLoader] = useState(false)
     const [totalCount, setTotalCount] = useState(0)
     const [search, setSearch] = useState('');
-    const [page, setPage] = useState(1);
+    // const [page, setPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1)
     const { data: initialData, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({
-        page: page,
+        page: currentPage,
         page_size: 20,
         search: search
     })
     const router = useRouter()
     const colorScheme = useColorScheme()
 
-    // useEffect(() => {
-    //     if (initialData) {
-    //         if (page === 1) {
-    //             setData(initialData?.results);
-    //         } else {
-    //             setData((prevItems) => [...prevItems, ...initialData.results]);
-    //         }
-    //         setTotalCount(initialData?.count);
-    //     }
-    // }, [initialData]);
+    useEffect(() => {
+        if (initialData) {
+            if (currentPage === 1) {
+                setData(initialData.results);
+            } else {
+                setData((prevItems) => [...prevItems, ...initialData.results]);
+            }
+            setTotalCount(initialData.count);
+        }
+    }, [initialData]);
 
-    // const debouncedSearch = React.useCallback(
-    //     _.debounce((searchQuery: string) => handleSearch(searchQuery), 500),
-    //     []
-    // );
+
 
     const handleSearch = (searchQuery: string) => {
         // setPage(1);
@@ -70,17 +68,18 @@ export default function TransactionScreen() {
         refetch();
     };
 
-    // const handleReachedEnd = () => {
-    //     if (data.length >= totalCount) {
-    //         return;
-    //     } else {
-    //         if (!isFetching) {
-    //             setBottomLoader(true);
-    //             setPage((prevPage) => prevPage + 1);
-    //             refetch().finally(() => setBottomLoader(false));
-    //         }
-    //     }
-    // };
+    const handleReachedEnd = () => {
+        if (data.length >= totalCount) {
+            return;
+        } else {
+            if (!isFetching) {
+                setBottomLoader(true);
+                setCurrentPage((prevPage) => prevPage + 1);
+                refetch().finally(() => setBottomLoader(false));
+            }
+        }
+    };
+
 
 
     const handlePdfView = async (id: string, name: string, mobile_number: string, amount: number, donation_type: string) => {
@@ -118,7 +117,7 @@ export default function TransactionScreen() {
             </View>
             {isFetching || isLoading && <ActivityIndicator className="mt-4" color={"green"} />}
             <FlatList
-                data={initialData?.results}
+                data={data}
                 keyExtractor={(item, index) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => <ListItemCard handlePdfPrint={handlePdfView} handlePdfShare={handlePdfView} {...item} />}
@@ -131,6 +130,8 @@ export default function TransactionScreen() {
                 style={{
                     height: '100%'
                 }}
+                handleReachedEnd={handleReachedEnd}
+                bottomLoader={bottomLoader}
                 // onEndReached={handleReachedEnd}
                 // onEndReachedThreshold={0.5}
                 // refreshControl={<RefreshControl
