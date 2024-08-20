@@ -25,22 +25,22 @@ export default function DonationBox() {
   const { data: initialData, error, isLoading, refetch, isFetching } = useGetBoxQuery({
     search: debouncedSearch,
     page: currentPage,
-    page_size: 20,
+    page_size: 10,
   })
 
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setDebouncedSearch(search);
-      refetch({ force: true })
-    }, 500)
+  // useEffect(() => {
+  //   const timerId = setTimeout(() => {
+  //     setDebouncedSearch(search);
+  //     refetch({ force: true })
+  //   }, 500)
 
-    return () => clearTimeout(timerId);
-  }, [search]);
+  //   return () => clearTimeout(timerId);
+  // }, [search]);
 
   useEffect(() => {
     if (initialData) {
       if (currentPage === 1) {
-        setData(initialData.results);
+        setData(initialData?.results);
       } else {
         setData((prevItems) => [...prevItems, ...initialData.results]);
       }
@@ -54,15 +54,16 @@ export default function DonationBox() {
   };
 
   const handleReachedEnd = () => {
-    if (data.length >= totalCount) {
-      return;
-    } else {
-      if (!isFetching) {
-        setBottomLoader(true);
-        setCurrentPage((prevPage) => prevPage + 1);
-        refetch().finally(() => setBottomLoader(false));
-      }
-    }
+    alert("")
+    // if (data.length >= totalCount) {
+    //   return;
+    // } else {
+    //   if (!isFetching) {
+    //     setBottomLoader(true);
+    //     setCurrentPage((prevPage) => prevPage + 1);
+    //     refetch().finally(() => setBottomLoader(false));
+    //   }
+    // }
   };
 
   return (
@@ -88,19 +89,15 @@ export default function DonationBox() {
         style={{
           // marginBottom: 50,
           // backgroundColor:'red',
-          height: '100%'
+          // height: '100%'
         }}
-        handleReachedEnd={handleReachedEnd}
-        bottomLoader={bottomLoader}
-        // refreshControl={<RefreshControl
-        //   refreshing={isFetching}
-        //   onRefresh={refetch}
-        // />
-        // }
-        initialNumToRender={20}
-        maxToRenderPerBatch={20}
-        windowSize={6}
-        removeClippedSubviews={Platform.OS === 'android'}
+        onEndReached={handleReachedEnd}
+        onEndReachedThreshold={0.7} // Adjust the threshold
+        scrollEventThrottle={16} // Add this prop
+        refreshControl={
+          <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+        }
+        initialNumToRender={10} // Adjust this if needed
       />
     </LayoutContainer>
   );

@@ -43,7 +43,7 @@ export default function TransactionScreen() {
     const [currentPage, setCurrentPage] = useState(1)
     const { data: initialData, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({
         page: currentPage,
-        page_size: 20,
+        page_size: 10,
         search: search
     })
     const router = useRouter()
@@ -69,6 +69,7 @@ export default function TransactionScreen() {
     };
 
     const handleReachedEnd = () => {
+        // alert("")
         if (data.length >= totalCount) {
             return;
         } else {
@@ -120,29 +121,25 @@ export default function TransactionScreen() {
                 data={data}
                 keyExtractor={(item, index) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => <ListItemCard handlePdfPrint={handlePdfView} handlePdfShare={handlePdfView} {...item} />}
+                renderItem={({ item }) => (
+                    <ListItemCard handlePdfPrint={handlePdfView} handlePdfShare={handlePdfView} {...item} />
+                )}
                 ListHeaderComponent={<ListHeader />}
-                ListFooterComponent={<View className='h-10 flex justify-center items-center mb-4'>
-                    {bottomLoader && <ActivityIndicator className="mt-4" color={"green"} />}
-                    {data.length === 0 && !isLoading && !isFetching && <Text className='text-center text-green-700 text-xl mt-4'>No Transaction Found</Text>}
-                </View>
+                ListFooterComponent={
+                    <View className="h-10 flex justify-center items-center mb-4">
+                        {bottomLoader && <ActivityIndicator className="mt-4" color={"green"} />}
+                        {data.length === 0 && !isLoading && !isFetching && (
+                            <Text className="text-center text-green-700 text-xl mt-4">No Transaction Found</Text>
+                        )}
+                    </View>
                 }
-                style={{
-                    height: '100%'
-                }}
-                handleReachedEnd={handleReachedEnd}
-                bottomLoader={bottomLoader}
-                // onEndReached={handleReachedEnd}
-                // onEndReachedThreshold={0.5}
-                // refreshControl={<RefreshControl
-                //     refreshing={isFetching}
-                //     onRefresh={refetch}
-                // />
-                // }
-                initialNumToRender={20}
-                maxToRenderPerBatch={20}
-                windowSize={6}
-                removeClippedSubviews={Platform.OS === 'android'}
+                onEndReached={handleReachedEnd}
+                onEndReachedThreshold={0.7} // Adjust the threshold
+                scrollEventThrottle={16} // Add this prop
+                refreshControl={
+                    <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+                }
+                initialNumToRender={10} // Adjust this if needed
             />
 
         </LayoutContainer>
