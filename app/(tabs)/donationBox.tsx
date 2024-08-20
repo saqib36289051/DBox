@@ -25,7 +25,7 @@ export default function DonationBox() {
   const { data: initialData, error, isLoading, refetch, isFetching } = useGetBoxQuery({
     search: debouncedSearch,
     page: currentPage,
-    page_size: 10,
+    page_size: 20,
   })
 
   // useEffect(() => {
@@ -54,16 +54,16 @@ export default function DonationBox() {
   };
 
   const handleReachedEnd = () => {
-    alert("")
-    // if (data.length >= totalCount) {
-    //   return;
-    // } else {
-    //   if (!isFetching) {
-    //     setBottomLoader(true);
-    //     setCurrentPage((prevPage) => prevPage + 1);
-    //     refetch().finally(() => setBottomLoader(false));
-    //   }
-    // }
+    // alert("")
+    if (data.length >= totalCount) {
+      return;
+    } else {
+      if (!isFetching) {
+        setBottomLoader(true);
+        setCurrentPage((prevPage) => prevPage + 1);
+        refetch().finally(() => setBottomLoader(false));
+      }
+    }
   };
 
   return (
@@ -85,19 +85,19 @@ export default function DonationBox() {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <DonationListItem {...item} />}
         ListHeaderComponent={<DonationListHeader />}
-        ListFooterComponent={<DonationListFooter reload={refetch} isShowReloadBtn={data?.length > 0} />}
+        // ListFooterComponent={<DonationListFooter bottomLoader={bottomLoader} reload={refetch} isShowReloadBtn={data?.length > 0} />}
         style={{
           // marginBottom: 50,
           // backgroundColor:'red',
-          // height: '100%'
+          height: '100%'
         }}
         onEndReached={handleReachedEnd}
-        onEndReachedThreshold={0.7} // Adjust the threshold
-        scrollEventThrottle={16} // Add this prop
-        refreshControl={
-          <RefreshControl refreshing={isFetching} onRefresh={refetch} />
-        }
-        initialNumToRender={10} // Adjust this if needed
+        // onEndReachedThreshold={0.7} // Adjust the threshold
+        // scrollEventThrottle={16} // Add this prop
+        // refreshControl={
+        //   <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+        // }
+        initialNumToRender={20} // Adjust this if needed
       />
     </LayoutContainer>
   );
