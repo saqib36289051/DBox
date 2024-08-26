@@ -30,16 +30,14 @@ const DonationListItem: React.FC<Props> = ({
             }
             key={id} >
             <View>
-
-                {/* // img ?
-                    //     <Image
-                    //         className="rounded-full w-12 h-12 object-cover shadow"
-                    //         source={{ uri: img }} />
-                    //     : */}
-                <View className="bg-green-700 w-12 h-12 rounded-full flex items-center justify-center">
-                    <Label type='p' weight='bold' className='text-white'>{getFirstLetters(name)}</Label>
-                </View>
-
+                {image ?
+                    <Image
+                        className="rounded-full w-12 h-12 object-cover shadow"
+                        source={{ uri: image }} />
+                    :
+                    <View className="bg-green-700 w-12 h-12 rounded-full flex items-center justify-center">
+                        <Label type='p' weight='bold' className='text-white'>{getFirstLetters(name)}</Label>
+                    </View>}
             </View>
             <View className='flex-1'>
                 <Label
@@ -48,7 +46,7 @@ const DonationListItem: React.FC<Props> = ({
                 >
                     {name}
                 </Label>
-                <View className='flex mt-2 space-y-1'>
+                <View className='flex mt-2'>
                     {/* <View className="flex-row space-x-2 items-center">
                         <Label
                             type="xs"
