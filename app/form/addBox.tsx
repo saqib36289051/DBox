@@ -1,5 +1,5 @@
-import { Image, ScrollView, StyleSheet, Text, ToastAndroid, useColorScheme, View } from 'react-native'
-import React, { useReducer, useState } from 'react'
+import { Image, Pressable, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, useColorScheme, View } from 'react-native'
+import React, { useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import LayoutContainer from '@/components/container/LayoutContainer'
 import * as ImagePicker from 'expo-image-picker';
 import { ImagePickerResult } from 'expo-image-picker';
@@ -11,7 +11,12 @@ import { useRouter } from 'expo-router'
 import { Colors } from '@/constants/Colors'
 import { useBoxMutation } from '@/store/services/boxApi'
 import Button from '@/components/ui/Button'
-
+import {
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import BottomSheetModalReusable from '@/components/ui/BottomSheet';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 
 type Props = {}
 
@@ -55,6 +60,9 @@ const AddBox = (props: Props) => {
     image: null
   })
 
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => ['25%'], []);
+
   async function addBox() {
     if (!validation()) {
       return
@@ -79,10 +87,9 @@ const AddBox = (props: Props) => {
         type: `image/${fileType}`,
       });
     }
-
+    
     try {
       const res = await box(formData)
-      console.log("🚀 ~ addBox ~ res:", res)
       if (res?.error) {
         Object.entries(res?.error?.data)?.map(([key, value]) => {
           ToastAndroid.show(`${value}`, ToastAndroid.SHORT)
@@ -140,7 +147,6 @@ const AddBox = (props: Props) => {
   }
 
   const pickImage = async () => {
-    // Ask the user for permission to access their media library
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
@@ -148,7 +154,6 @@ const AddBox = (props: Props) => {
       return;
     }
 
-    // Launch the image picker
     const result: ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -156,13 +161,15 @@ const AddBox = (props: Props) => {
       quality: 1,
     });
 
+    bottomSheetModalRef?.current?.dismiss()
+
     if (!result.canceled) {
       dispatch({ image: result.assets[0].uri });
+      bottomSheetModalRef?.current?.dismiss()
     }
   };
 
   const takePhoto = async () => {
-    // Ask the user for permission to access their camera
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
@@ -170,122 +177,162 @@ const AddBox = (props: Props) => {
       return;
     }
 
-    // Launch the camera
     const result: ImagePickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
+    bottomSheetModalRef?.current?.dismiss()
+
     if (!result.canceled) {
       dispatch({ image: result.assets[0].uri });
+      bottomSheetModalRef?.current?.dismiss()
     }
   };
 
-
   return (
-    <LayoutContainer>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        className="gap-y-2">
-        <View className='h-20 justify-center'>
-          <Label weight='medium'>Fill out the form value to collect the donation from the custodian.</Label>
-        </View>
-        <View>
-          {state.image && (
-            <Image
-              source={{ uri: state.image }}
-              style={{ width: 200, height: 200 }}
-            />)}
-          <Button onPress={pickImage} title="Pick an Image from Gallery" />
-          <Button onPress={takePhoto} title="Take a Photo" />
-        </View>
-        <View>
-          <Input
-            label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Mobile Number</Label>}
-            onChangeText={(e) => dispatch({ mobile_number: e })}
-            value={state.mobile_number}
-            keyboardType='phone-pad'
-            placeholder='+920000000000'
-            placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-          />
-          {errors.mobile_number && <Label type='xs' weight='medium' className='text-red-500'>{errors.mobile_number}</Label>}
-        </View>
-        <View>
-          <Input
-            label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Name</Label>}
-            onChangeText={(e) => dispatch({ name: e })}
-            value={state.name}
-            placeholder='Enter Custodian Name'
-            placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-          />
-          {errors.name && <Label type='xs' weight='medium' className='text-red-500'>{errors.name}</Label>}
-        </View>
-        <View>
-          <Input
-            label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>State / Province</Label>}
-            onChangeText={(e) => dispatch({ province: e })}
-            value={state.province}
-            placeholder='State / Province'
-            placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-          />
-          {errors.province && <Label type='xs' weight='medium' className='text-red-500'>{errors.province}</Label>}
-        </View>
-        <View>
-          <Input
-            label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>City</Label>}
-            onChangeText={(e) => dispatch({ city: e })}
-            value={state.city}
-            placeholder='City'
-            placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-          />
-          {errors.city && <Label type='xs' weight='medium' className='text-red-500'>{errors.city}</Label>}
-        </View>
-        <View>
-          <Input
-            label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Area</Label>}
-            onChangeText={(e) => dispatch({ area: e })}
-            value={state.area}
-            placeholder='Area'
-            placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-          />
-          {errors.area && <Label type='xs' weight='medium' className='text-red-500'>{errors.area}</Label>}
-        </View>
-        <View>
-          <Input
-            label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Complete Address</Label>}
-            onChangeText={(e) => dispatch({ complete_address: e })}
-            value={state.complete_address}
-            placeholder='Complete Address'
-            multiline={true}
-            numberOfLines={2}
-            className='h-18'
-            textAlignVertical='top'
-            placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
-          />
-          {errors.complete_address && <Label type='xs' weight='medium' className='text-red-500'>{errors.complete_address}</Label>}
-        </View>
-        <View>
-          <Label type='sm' weight='regular' className='mb-3 text-gray-600'>Gender</Label>
-          <CheckboxGroup
-            data={state.gender}
-            onCheckChange={(data) => dispatch({ gender: data })}
-          />
-          {errors.gender && <Label type='xs' weight='medium' className='text-red-500'>{errors.gender}</Label>}
-        </View>
-        <Button
-          onPress={addBox}
-          title="Add New Box"
-          className='mb-2'
-          isLoading={isLoading}
-        />
-      </ScrollView>
+    <View className="flex-1">
+      <LayoutContainer>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          className="gap-y-2">
+          <View className='h-20 justify-center'>
+            <Label weight='medium'>Fill out the form value to collect the donation from the custodian.</Label>
+          </View>
+          <View className='flex-row justify-center rounded-full'>
+            {state.image ? (
+              <Pressable
+                onPress={() => bottomSheetModalRef?.current?.present()}
+              >
+                <>
+                  <Image
+                    source={{ uri: state.image }}
+                    style={{ width: 200, height: 200, borderRadius: 100 }}
+                  />
+                </>
+                <View className="absolute z-10 bottom-0 top-0 left-0 right-0 rounded-full flex items-center justify-center">
+                  <Ionicons name="camera" size={32} color="#fff" />
+                </View>
+              </Pressable>
+            ) : (
+              <TouchableOpacity
+                onPress={() => bottomSheetModalRef?.current?.present()}
+                style={{ width: 200, height: 200, borderRadius: 100 }}
+                className="bg-gray-400 flex items-center justify-center"
+              >
+                <Ionicons name="camera" size={32} color="#fff" />
+              </TouchableOpacity>
+            )
 
-
-    </LayoutContainer >
+            }
+          </View>
+          <View>
+            <Input
+              label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Mobile Number</Label>}
+              onChangeText={(e) => dispatch({ mobile_number: e })}
+              value={state.mobile_number}
+              keyboardType='phone-pad'
+              placeholder='+920000000000'
+              placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
+            />
+            {errors.mobile_number && <Label type='xs' weight='medium' className='text-red-500'>{errors.mobile_number}</Label>}
+          </View>
+          <View>
+            <Input
+              label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Name</Label>}
+              onChangeText={(e) => dispatch({ name: e })}
+              value={state.name}
+              placeholder='Enter Custodian Name'
+              placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
+            />
+            {errors.name && <Label type='xs' weight='medium' className='text-red-500'>{errors.name}</Label>}
+          </View>
+          <View>
+            <Input
+              label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>State / Province</Label>}
+              onChangeText={(e) => dispatch({ province: e })}
+              value={state.province}
+              placeholder='State / Province'
+              placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
+            />
+            {errors.province && <Label type='xs' weight='medium' className='text-red-500'>{errors.province}</Label>}
+          </View>
+          <View>
+            <Input
+              label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>City</Label>}
+              onChangeText={(e) => dispatch({ city: e })}
+              value={state.city}
+              placeholder='City'
+              placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
+            />
+            {errors.city && <Label type='xs' weight='medium' className='text-red-500'>{errors.city}</Label>}
+          </View>
+          <View>
+            <Input
+              label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Area</Label>}
+              onChangeText={(e) => dispatch({ area: e })}
+              value={state.area}
+              placeholder='Area'
+              placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
+            />
+            {errors.area && <Label type='xs' weight='medium' className='text-red-500'>{errors.area}</Label>}
+          </View>
+          <View>
+            <Input
+              label={<Label type='sm' weight='regular' className='mb-1 text-gray-600'>Complete Address</Label>}
+              onChangeText={(e) => dispatch({ complete_address: e })}
+              value={state.complete_address}
+              placeholder='Complete Address'
+              multiline={true}
+              numberOfLines={2}
+              className='h-18'
+              textAlignVertical='top'
+              placeholderTextColor={Colors[colorScheme ?? 'light'].placeholder}
+            />
+            {errors.complete_address && <Label type='xs' weight='medium' className='text-red-500'>{errors.complete_address}</Label>}
+          </View>
+          <View>
+            <Label type='sm' weight='regular' className='mb-3 text-gray-600'>Gender</Label>
+            <CheckboxGroup
+              data={state.gender}
+              onCheckChange={(data) => dispatch({ gender: data })}
+            />
+            {errors.gender && <Label type='xs' weight='medium' className='text-red-500'>{errors.gender}</Label>}
+          </View>
+          <Button
+            onPress={addBox}
+            title="Add New Box"
+            className='mb-2'
+            isLoading={isLoading}
+          />
+        </ScrollView>
+      </LayoutContainer >
+      <BottomSheetModalReusable
+        ref={bottomSheetModalRef}
+        snapPoints={snapPoints}
+      >
+        <View className='flex-row h-full items-center justify-around'>
+          <Pressable
+            onPress={pickImage}
+            android_ripple={{ color: 'lightgray', radius: 36 }}
+            className="bg-gray-100 p-5 rounded-full">
+            <Entypo name="images" size={36} color="green" />
+          </Pressable>
+          <Pressable
+            onPress={takePhoto}
+            android_ripple={{ color: 'lightgray', radius: 36 }}
+            className="bg-gray-100 p-5 rounded-full">
+            <Entypo name="camera" size={36} color="green" />
+          </Pressable>
+        </View>
+      </BottomSheetModalReusable>
+    </View>
   )
 }
 
 export default AddBox
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+})

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
@@ -8,6 +9,10 @@ import { store } from '@/store';
 import '../global.css'
 import { useFonts } from 'expo-font';
 import * as Updates from 'expo-updates';
+import {
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,12 +53,16 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="form" options={{ headerShown: false }} />
-        <Stack.Screen name="reportPdf" options={{ headerShown: false }} />
-      </Stack>
+      <GestureHandlerRootView className="flex-1">
+        <BottomSheetModalProvider>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="form" options={{ headerShown: false }} />
+            <Stack.Screen name="reportPdf" options={{ headerShown: false }} />
+          </Stack>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
     </Provider>
   );
 }
