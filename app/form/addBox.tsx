@@ -44,7 +44,6 @@ const initValues = [{
 const AddBox = () => {
   const params = useLocalSearchParams<BoxEditPropsType>()
   const isEdit = params?.id ? true : false
-  console.log("🚀 ~ AddBox ~ params?.id:", params?.id)
   const colorScheme = useColorScheme();
   const router = useRouter()
   const [box, { isLoading, isError, error }] = useBoxMutation()
