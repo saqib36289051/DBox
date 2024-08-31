@@ -29,6 +29,10 @@ const customBaseQuery = (baseUrl) => {
   const baseQuery = fetchBaseQuery({ baseUrl });
 
   return async (args, api, extraOptions) => {
+    console.log(
+      "🚀 ~ return ~ args, api, extraOptions:",
+      JSON.stringify({ args, api, extraOptions }, null, 2)
+    );
     const token = await getData("userInfo").then((data) => data?.access);
     if (token) {
       args.headers = {

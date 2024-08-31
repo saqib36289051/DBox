@@ -16,10 +16,14 @@ const DonationListItem: React.FC<Props> = ({
     city,
     complete_address,
     mobile_number,
-    image
+    area,
+    image,
+    province,
+    gender
 }) => {
     return (
         <Pressable
+            onLongPress={() => router.navigate(`/form/addBox?id=${id}&name=${name}&mobile_number=${mobile_number}&city=${city}&complete_address=${complete_address}&city=${city}&image=${image}&province=${province}&gender=${gender}&area=${area}`)}
             onPress={() => router.navigate(`/form/boxTransaction?id=${id}&name=${name}&mobile_number=${mobile_number}&city=${city}&complete_address=${complete_address}`)}
             style={({ pressed }) => [
                 {

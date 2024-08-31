@@ -6,6 +6,9 @@ export type DonationList = {
   complete_address: string;
   image: string;
   mobile_number: string;
+  province: string;
+  gender: string;
+  area: string;
 };
 
 export type DonationTransactinList = {
@@ -56,4 +59,26 @@ export type MonthlyReportListType = {
   city: string;
   donation_type: string;
   amount: number;
+};
+
+//box Edit Props Type
+// mobile_number: string;
+// name: string;
+// province: string;
+// city: string;
+// area: string;
+// complete_address: string;
+// gender: GenderListType[];
+// image: string | null;
+
+export type BoxEditPropsType = {
+  id: string;
+  mobile_number: string;
+  name: string;
+  province: string;
+  city: string;
+  area: string;
+  complete_address: string;
+  gender: string;
+  image: string;
 };

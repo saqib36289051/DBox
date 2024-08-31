@@ -6,19 +6,16 @@ import { ImagePickerResult } from 'expo-image-picker';
 import Label from '@/components/ui/Label'
 import CheckboxGroup from '@/components/ui/CheckboxGroup'
 import Input from '@/components/ui/Input'
-import { GenderListType } from '@/constants/Types'
-import { useRouter } from 'expo-router'
+import { BoxEditPropsType, GenderListType } from '@/constants/Types'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Colors } from '@/constants/Colors'
-import { useBoxMutation } from '@/store/services/boxApi'
+import { useBoxMutation, useUpdateBoxMutation } from '@/store/services/boxApi'
 import Button from '@/components/ui/Button'
 import {
   BottomSheetModal,
-  BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import BottomSheetModalReusable from '@/components/ui/BottomSheet';
 import { Entypo, Ionicons } from '@expo/vector-icons';
-
-type Props = {}
 
 type State = {
   mobile_number: string;
@@ -27,38 +24,56 @@ type State = {
   city: string;
   area: string;
   complete_address: string;
-  gender: GenderListType[];
+  gender: GenderListType[]
   image: string | null;
 }
 
 type Action = Partial<State>;
 
-const AddBox = (props: Props) => {
+const initValues = [{
+  id: 1,
+  text: "Male",
+  isChecked: false,
+},
+{
+  id: 2,
+  text: "Female",
+  isChecked: false,
+}]
+
+const AddBox = () => {
+  const params = useLocalSearchParams<BoxEditPropsType>()
+  const isEdit = params?.id ? true : false
+  console.log("🚀 ~ AddBox ~ params?.id:", params?.id)
   const colorScheme = useColorScheme();
   const router = useRouter()
   const [box, { isLoading, isError, error }] = useBoxMutation()
+  const [updateBox, { isLoading: isUpdateLoading, isError: isUpdateError, error: updateError }] = useUpdateBoxMutation()
   const [errors, setErrors] = useState<any>({})
   const [state, dispatch] = useReducer((state: State, action: Action) => {
     return { ...state, ...action }
   }, {
-    mobile_number: '',
-    name: '',
-    province: '',
-    city: '',
-    area: '',
-    complete_address: '',
-    gender: [{
-      id: 1,
-      text: "Male",
-      isChecked: false,
-    },
-    {
-      id: 2,
-      text: "Female",
-      isChecked: false,
-    }],
-    image: null
+    mobile_number: params?.mobile_number || '',
+    name: params?.name || '',
+    province: params?.province || '',
+    city: params?.city || '',
+    area: params?.area || '',
+    complete_address: params?.complete_address || '',
+    gender: isEdit ? getGenderVals() : initValues,
+    image: params?.image || null
   })
+
+
+  function getGenderVals(): GenderListType[] {
+    const genderVal = initValues?.find(i => i?.text === params?.gender)
+    const mutated = initValues?.map(i => {
+      if (i?.text === genderVal?.text) {
+        return { ...i, isChecked: true }
+      }
+      return { ...i, isChecked: false }
+    })
+    return mutated
+  }
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ['25%'], []);
@@ -87,7 +102,7 @@ const AddBox = (props: Props) => {
         type: `image/${fileType}`,
       });
     }
-    
+
     try {
       const res = await box(formData)
       if (res?.error) {
@@ -100,6 +115,52 @@ const AddBox = (props: Props) => {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  async function iUpdateBox() {
+    if (!validation()) {
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('mobile_number', state.mobile_number)
+    formData.append('name', state.name)
+    formData.append('province', state.province)
+    formData.append('city', state.city)
+    formData.append('area', state.area)
+    formData.append('complete_address', state.complete_address)
+    const gender = state.gender.find(g => g.isChecked === true)?.text
+    if (gender) {
+      formData.append("gender", gender)
+    }
+    if (state.image) {
+      const uriParts = state.image.split('.');
+      const fileName = state.image.split('/').pop()
+      const fileType = uriParts[uriParts.length - 1];
+      formData.append('image', {
+        uri: state.image,
+        name: fileName,
+        type: `image/${fileType}`,
+      });
+    }
+
+    try {
+      const res = await updateBox({
+        id: params?.id,
+        formData,
+      })
+      if (res?.error) {
+        console.log("🚀 ~ iUpdateBox ~ res?.error:", res?.error)
+        ToastAndroid.show(`${res?.error?.data}`, ToastAndroid.SHORT)
+        // Object.entries(res?.error?.data)?.map(([key, value]) => {
+        // })
+        return
+      }
+      router.back()
+    } catch (error) {
+      console.log(error)
+    }
+
   }
 
 
@@ -137,7 +198,7 @@ const AddBox = (props: Props) => {
     if (state.complete_address === '') {
       error.complete_address = 'Complete Address is required'
     }
-    if (!state.gender.find(g => g.isChecked === true)) {
+    if (typeof state.gender !== "string" && !state.gender.find(g => g.isChecked === true)) {
       error.gender = 'Select Gender'
     }
 
@@ -201,14 +262,14 @@ const AddBox = (props: Props) => {
             <Label weight='medium'>Fill out the form value to collect the donation from the custodian.</Label>
           </View>
           <View className='flex-row justify-center rounded-full'>
-            {state.image ? (
+            {state.image != "null" && state.image ? (
               <Pressable
                 onPress={() => bottomSheetModalRef?.current?.present()}
               >
                 <>
                   <Image
                     source={{ uri: state.image }}
-                    style={{ width: 200, height: 200, borderRadius: 100 }}
+                    style={{ width: 160, height: 160, borderRadius: 100 }}
                   />
                 </>
                 <View className="absolute z-10 bottom-0 top-0 left-0 right-0 rounded-full flex items-center justify-center">
@@ -218,7 +279,7 @@ const AddBox = (props: Props) => {
             ) : (
               <TouchableOpacity
                 onPress={() => bottomSheetModalRef?.current?.present()}
-                style={{ width: 200, height: 200, borderRadius: 100 }}
+                style={{ width: 160, height: 160, borderRadius: 100 }}
                 className="bg-gray-400 flex items-center justify-center"
               >
                 <Ionicons name="camera" size={32} color="#fff" />
@@ -301,30 +362,38 @@ const AddBox = (props: Props) => {
             {errors.gender && <Label type='xs' weight='medium' className='text-red-500'>{errors.gender}</Label>}
           </View>
           <Button
-            onPress={addBox}
-            title="Add New Box"
+            onPress={isEdit ? iUpdateBox : addBox}
+            title={isEdit ? "UpdateBox" : "Add New Box"}
             className='mb-2'
             isLoading={isLoading}
           />
         </ScrollView>
       </LayoutContainer >
+
+      {/* Bottom Sheet Modal */}
       <BottomSheetModalReusable
         ref={bottomSheetModalRef}
         snapPoints={snapPoints}
       >
         <View className='flex-row h-full items-center justify-around'>
-          <Pressable
-            onPress={pickImage}
-            android_ripple={{ color: 'lightgray', radius: 36 }}
-            className="bg-gray-100 p-5 rounded-full">
-            <Entypo name="images" size={36} color="green" />
-          </Pressable>
-          <Pressable
-            onPress={takePhoto}
-            android_ripple={{ color: 'lightgray', radius: 36 }}
-            className="bg-gray-100 p-5 rounded-full">
-            <Entypo name="camera" size={36} color="green" />
-          </Pressable>
+          <View className='flex flex-col items-center space-y-3'>
+            <Pressable
+              onPress={pickImage}
+              android_ripple={{ color: 'lightgray', radius: 36 }}
+              className="bg-gray-100 p-5 rounded-full">
+              <Entypo name="images" size={36} color="green" />
+            </Pressable>
+            <Label type='xs'>Gallery</Label>
+          </View>
+          <View className='flex flex-col items-center space-y-3'>
+            <Pressable
+              onPress={takePhoto}
+              android_ripple={{ color: 'lightgray', radius: 36 }}
+              className="bg-gray-100 p-5 rounded-full">
+              <Entypo name="camera" size={36} color="green" />
+            </Pressable>
+            <Label type='xs'>Camera</Label>
+          </View>
         </View>
       </BottomSheetModalReusable>
     </View>

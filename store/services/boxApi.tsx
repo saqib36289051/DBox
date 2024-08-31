@@ -16,6 +16,15 @@ export const boxApi = createApi({
             }),
             invalidatesTags: ['Box'],
         }),
+        updateBox: builder.mutation({
+            query: ({ id, formData }) => ({
+                url: `/box/${id}/`,
+                method: 'PUT',
+                headers: { "Content-Type": "multipart/form-data" },
+                body: formData,
+            }),
+            invalidatesTags: ['Box'],
+        }),
         getBox: builder.query({
             query: (filters) => ({
                 url: '/box/',
@@ -27,4 +36,4 @@ export const boxApi = createApi({
     }),
 });
 
-export const { useBoxMutation, useGetBoxQuery } = boxApi;
+export const { useBoxMutation, useGetBoxQuery, useUpdateBoxMutation } = boxApi;
