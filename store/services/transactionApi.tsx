@@ -51,11 +51,22 @@ export const transactionApi = createApi({
             }),
             providesTags: ["Transaction"]
         }),
+        updateBoxStatus: builder.query({
+            query: () => ({
+                url: '/update-box-status/',
+                method: 'GET'
+            }),
+            providesTags: ["Transaction"]
+        })
     }),
 });
 
-export const { useTransactionMutation, useGetTransactionsQuery,
-    useGetTransactionTotalsQuery, useGetTransactionGraphDataQuery,
+export const {
+    useTransactionMutation,
+    useGetTransactionsQuery,
+    useGetTransactionTotalsQuery,
+    useGetTransactionGraphDataQuery,
     useGetDownloadReportMutation,
-    useGetReportDataQuery
+    useGetReportDataQuery,
+    useUpdateBoxStatusQuery
 } = transactionApi;

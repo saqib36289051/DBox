@@ -2,7 +2,7 @@ import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, useW
 import React, { useEffect } from 'react'
 import LayoutContainer from '@/components/container/LayoutContainer'
 import Label from '@/components/ui/Label'
-import { useGetDownloadReportMutation, useGetTransactionGraphDataQuery, useGetTransactionsQuery, useGetTransactionTotalsQuery } from '@/store/services/transactionApi'
+import { useGetDownloadReportMutation, useGetTransactionGraphDataQuery, useGetTransactionsQuery, useGetTransactionTotalsQuery, useUpdateBoxStatusQuery } from '@/store/services/transactionApi'
 import { AntDesign, Feather, FontAwesome, FontAwesome5, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { LineChart } from 'react-native-gifted-charts'
 import { formatNumberExtended, getCurrentMonthStartAndEnd, getDate, getTime } from '@/utils/utils'
@@ -17,6 +17,7 @@ const DashboardScreen = (props: Props) => {
   const { data: graph = {}, isLoading: isLoadingGraph, refetch: graphDataRefetch } = useGetTransactionGraphDataQuery({})
   const [getDownloadReport, { isLoading: isDownloading }] = useGetDownloadReportMutation();
   const { data: transactionList = {}, refetch: transactionListLatest } = useGetTransactionsQuery({})
+  const { data: message } = useUpdateBoxStatusQuery({})
   const { width, height } = useWindowDimensions()
   const router = useRouter()
   const user = useAuthHook()
