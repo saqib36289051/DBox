@@ -101,7 +101,7 @@ const ListItemCard: React.FC<Props> = ({
                                     weight="medium"
                                     className='text-gray-600'
                                 >
-                                    Address
+                                    Address:
                                 </Label>
                                 <Label type='xs' weight='regular' className={'text-gray-600 max-w-[95%]'}>{complete_address}</Label>
 

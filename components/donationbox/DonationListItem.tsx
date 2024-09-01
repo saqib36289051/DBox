@@ -13,6 +13,7 @@ const DonationListItem: React.FC<Props> = ({
     id,
     name,
     city,
+    status,
     complete_address,
     mobile_number,
     area,
@@ -39,7 +40,7 @@ const DonationListItem: React.FC<Props> = ({
                         source={{ uri: image }} />
                     :
                     <View className="bg-green-700 w-12 h-12 rounded-full flex items-center justify-center">
-                        <Label type='p' weight='bold' className='text-white'>{getFirstLetters(name)}</Label>
+                        <Label type='sm' weight='bold' className='text-white'>{getFirstLetters(name)}</Label>
                     </View>}
             </View>
             <View className='flex-1'>
@@ -49,8 +50,8 @@ const DonationListItem: React.FC<Props> = ({
                 >
                     {name}
                 </Label>
-                <View className='flex mt-2'>
-                    {/* <View className="flex-row space-x-2 items-center">
+                <View className='flex'>
+                    <View className="flex-row space-x-2 items-center">
                         <Label
                             type="xs"
                             weight="medium"
@@ -58,9 +59,9 @@ const DonationListItem: React.FC<Props> = ({
                         >
                             Status:
                         </Label>
-                        <Label type='xs' weight='regular' className={`${status === 'Active' ? 'text-green-600' : 'text-yellow-600'}`}>{status}</Label>
+                        <Label type='xs' weight='regular' className={`${status === 'open' ? 'text-green-700 bg-green-300 rounded px-1' : 'text-yellow-700 bg-yellow-300 rounded px-1'}`}>{status}</Label>
 
-                    </View> */}
+                    </View>
                     <View className="flex-row space-x-2 items-center">
                         <Label
                             type="xs"
@@ -72,15 +73,15 @@ const DonationListItem: React.FC<Props> = ({
                         <Label type='xs' weight='regular' className={'text-gray-600'}>{city}</Label>
 
                     </View>
-                    <View className="gap-y-1">
+                    <View className="flex-row space-x-2">
                         <Label
                             type="xs"
                             weight="medium"
                             className='text-gray-600'
                         >
-                            Address
+                            Address:
                         </Label>
-                        <Label type='xs' weight='regular' className={'text-gray-600 basis[80%] flex-wrap flex-1'}>{complete_address}</Label>
+                        <Label type='xs' weight='regular' className={'text-gray-600 flex max-w-[80%]'}>{complete_address}</Label>
 
                     </View>
                 </View>
@@ -93,6 +94,7 @@ export default DonationListItem
 
 const styles = StyleSheet.create({
     card: {
+        height: 110,
         flexDirection: 'row',
         columnGap: 8,
         marginVertical: 4,

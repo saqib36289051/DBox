@@ -88,7 +88,7 @@ export default function TransactionScreen() {
             "[C]-------------------------------[C]\n" +
             "[C]<b><font size='normal'>JAMIA NIZAM-E-MUSTAFA</font></b>\n" +
             "[C]<b><font size='normal'>(Registered)</font></b>\n" +
-            "[C]<font size='normal'>Tehsil & Disst: Mianwali</font>\n" +
+            "[C]<font size='normal'>Thatthi Daudkhel, Tehsil & Disst: Mianwali</font>\n" +
             "[C]<font size='normal'>0306-8642243</font>\n" +
             "[C]<font size='normal'>Email: info@nizamemustafa.com</font>\n" +
             "[C]-------------------------------[C]\n" +
@@ -97,7 +97,8 @@ export default function TransactionScreen() {
             `[L]<b>Donation:</b>[R]${amount}\n` +
             `[L]<b>Collection Mode:</b>[R]${donation_type}\n` +
             "[C]-------------------------------[C]\n" +
-            `[L]<b><u>Jamia Niazame Mustafa</u></b> Aap k channdy ko kisi bhi jaiz, deeni, islahi, rohani aur bhalai k kam mein kharch kia jaye ga\n` +
+            `[L]<b><u>Mufti M Junaind Raza Khan Qadri</u></b>[L]\n` +
+            `[L]Aap k channdy ko kisi bhi jaiz, deeni, islahi, rohani aur bhalai k kam mein kharch kia jaye ga[L]\n` +
             `<qrcode size='20'>JAMIA NIZAM-E-MUSTAFA</qrcode>`
         await printReceipt(text)
     };

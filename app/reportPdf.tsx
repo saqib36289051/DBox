@@ -202,6 +202,7 @@ const ReportPdf = (props: Props) => {
 
   return (
     <>
+    
       {!pdfUri && data?.length !== 0 ? (
         <View className="flex-1 items-center justify-center px-4">
           <Button
