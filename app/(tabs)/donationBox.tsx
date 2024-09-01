@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import LayoutContainer from '@/components/container/LayoutContainer';
-import { View, FlatList, useColorScheme, RefreshControl, Platform } from 'react-native';
+import { View, FlatList, useColorScheme, RefreshControl, Platform, ActivityIndicator } from 'react-native';
 import Input from '@/components/ui/Input';
+import _ from 'lodash';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import DonationListItem from '@/components/donationbox/DonationListItem';
@@ -19,11 +20,10 @@ export default function DonationBox() {
   const [bottomLoader, setBottomLoader] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
-  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const router = useRouter()
   const colorScheme = useColorScheme()
   const { data: initialData, error, isLoading, refetch, isFetching } = useGetBoxQuery({
-    search: debouncedSearch,
+    search: search,
     page: currentPage,
     page_size: 20,
   })
@@ -35,17 +35,28 @@ export default function DonationBox() {
       } else {
         setData((prevItems) => [...prevItems, ...initialData.results]);
       }
+      setBottomLoader(false)
       setTotalCount(initialData.count);
     }
   }, [initialData]);
 
+  const debouncedSearch = useCallback(
+    _.debounce((searchQuery: string) => handleSearch(searchQuery), 500),
+    []
+  );
 
   const handleSearch = (value: string) => {
-    setSearch(value);
+      setCurrentPage(1);
+      setSearch(value);
+      refetch()
   };
 
+  function handleChange(e: string) {
+    setSearch(e);
+    debouncedSearch(e);
+  }
+
   const handleReachedEnd = () => {
-    // alert("")
     if (data.length >= totalCount) {
       return;
     } else {
@@ -64,7 +75,7 @@ export default function DonationBox() {
           <Input
             icon={<Feather name="search" size={24} color={Colors[colorScheme ?? 'light'].icon} />}
             placeholder='Search for Donation Box'
-            onChangeText={(e) => handleSearch(e)}
+            onChangeText={(e) => handleChange(e)}
             value={search}
           />
         </View>
@@ -76,7 +87,11 @@ export default function DonationBox() {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <DonationListItem {...item} />}
         ListHeaderComponent={<DonationListHeader />}
-        // ListFooterComponent={<DonationListFooter bottomLoader={bottomLoader} reload={refetch} isShowReloadBtn={data?.length > 0} />}
+        ListFooterComponent={
+          <View className='h-10 flex justify-center'>
+            {bottomLoader && <ActivityIndicator color={Colors[colorScheme ?? 'light'].tint} />}
+          </View>
+        }
         style={{
           // marginBottom: 50,
           // backgroundColor:'red',
