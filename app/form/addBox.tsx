@@ -16,6 +16,17 @@ import {
 } from '@gorhom/bottom-sheet';
 import BottomSheetModalReusable from '@/components/ui/BottomSheet';
 import { Entypo, Ionicons } from '@expo/vector-icons';
+const defaultParams = {
+  id: null,
+  mobile_number: '',
+  name: '',
+  province: '',
+  city: '',
+  area: '',
+  complete_address: '',
+  gender: '',
+  image: null,
+};
 
 type State = {
   mobile_number: string;
@@ -42,7 +53,8 @@ const initValues = [{
 }]
 
 const AddBox = () => {
-  const params = useLocalSearchParams<BoxEditPropsType>()
+  const params = { ...defaultParams, ...useLocalSearchParams<BoxEditPropsType>() }
+  console.log("🚀 ~ AddBox ~ params:", params)
   const isEdit = params?.id ? true : false
   const colorScheme = useColorScheme();
   const router = useRouter()
@@ -64,14 +76,9 @@ const AddBox = () => {
 
 
   function getGenderVals(): GenderListType[] {
-    const genderVal = initValues?.find(i => i?.text === params?.gender)
-    const mutated = initValues?.map(i => {
-      if (i?.text === genderVal?.text) {
-        return { ...i, isChecked: true }
-      }
-      return { ...i, isChecked: false }
-    })
-    return mutated
+    if (!params?.gender) return initValues;
+    const genderVal = initValues.find(i => i?.text === params?.gender);
+    return initValues.map(i => ({ ...i, isChecked: i?.text === genderVal?.text }));
   }
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -197,7 +204,7 @@ const AddBox = () => {
     if (state.complete_address === '') {
       error.complete_address = 'Complete Address is required'
     }
-    if (typeof state.gender !== "string" && !state.gender.find(g => g.isChecked === true)) {
+    if (!state.gender.find(g => g.isChecked === true)) {
       error.gender = 'Select Gender'
     }
 
@@ -261,13 +268,13 @@ const AddBox = () => {
             <Label weight='medium'>Fill out the form value to collect the donation from the custodian.</Label>
           </View>
           <View className='flex-row justify-center rounded-full'>
-            {state.image != "null" && state.image ? (
+            {state?.image && state?.image !== "null" ? (
               <Pressable
                 onPress={() => bottomSheetModalRef?.current?.present()}
               >
                 <>
                   <Image
-                    source={{ uri: state.image }}
+                    source={{ uri: state?.image }}
                     style={{ width: 160, height: 160, borderRadius: 100 }}
                   />
                 </>
@@ -364,7 +371,7 @@ const AddBox = () => {
             onPress={isEdit ? iUpdateBox : addBox}
             title={isEdit ? "UpdateBox" : "Add New Box"}
             className='mb-2'
-            isLoading={isLoading}
+            isLoading={isLoading || isUpdateLoading}
           />
         </ScrollView>
       </LayoutContainer >

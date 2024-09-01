@@ -1,7 +1,7 @@
 export type DonationList = {
   id: number;
   name: string;
-  status: string;
+  status?: string;
   city: string;
   complete_address: string;
   image: string;
@@ -20,6 +20,10 @@ export type DonationTransactinList = {
   complete_address: string;
   donation_type: string;
   mobile_number: string;
+  image: string;
+  province: string;
+  gender: string;
+  area: string;
 };
 
 export type GenderListType = {

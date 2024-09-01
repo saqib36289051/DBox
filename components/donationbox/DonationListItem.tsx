@@ -12,7 +12,6 @@ type Props = DonationList & {}
 const DonationListItem: React.FC<Props> = ({
     id,
     name,
-    status = 'Active',
     city,
     complete_address,
     mobile_number,

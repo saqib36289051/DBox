@@ -79,7 +79,7 @@ const Login = (props: Props) => {
       <View className="space-y-2 px-4 w-full">
         <View>
           <Input
-            label={<Label className="text-gray-600 font-medium mb-1">User ID</Label>}
+            label={<Label className="text-gray-600 font-medium mb-1">Phone Number</Label>}
             onChangeText={v => setUserId(v)}
             value={userId}
             placeholder="User ID"

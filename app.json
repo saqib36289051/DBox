@@ -2,7 +2,7 @@
   "expo": {
     "name": "DBox",
     "slug": "DBox",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -16,6 +16,7 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -66,7 +67,7 @@
         "projectId": "67fe2c03-a919-4c90-a2a4-0b1a56ec3a3f"
       }
     },
-    "runtimeVersion": "1.0.0",
+    "runtimeVersion": "1.0.1",
     "updates": {
       "url": "https://u.expo.dev/67fe2c03-a919-4c90-a2a4-0b1a56ec3a3f"
     }
