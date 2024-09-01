@@ -28,15 +28,6 @@ export default function DonationBox() {
     page_size: 20,
   })
 
-  // useEffect(() => {
-  //   const timerId = setTimeout(() => {
-  //     setDebouncedSearch(search);
-  //     refetch({ force: true })
-  //   }, 500)
-
-  //   return () => clearTimeout(timerId);
-  // }, [search]);
-
   useEffect(() => {
     if (initialData) {
       if (currentPage === 1) {
