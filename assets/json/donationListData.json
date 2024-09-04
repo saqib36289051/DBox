@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "Ahmad Kariyana Store",
+    "collectedAmount": 100,
+    "status": "Active",
+    "district": "Mianwali",
+    "address": "Mianwali, Punjab, Pakistan",
+    "img": "https://img.freepik.com/free-photo/cheerful-curly-business-girl-wearing-glasses_176420-206.jpg?w=1060&t=st=1717237315~exp=1717237915~hmac=78580e837a5f319e58865dc8bab5eb264e94d12695e6f20d7cce5a138283948c"
+  },
+  {
+    "id": 2,
+    "name": "Jane",
+    "collectedAmount": 200,
+    "status": "Pending",
+    "address": "Mianwali, Punjab, Pakistan",
+    "district": "Mianwali",
+    "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
+  },
+  {
+    "id": 3,
+    "name": "Doe",
+    "collectedAmount": 300,
+    "status": "Pending",
+    "address": "Mianwali, Punjab, Pakistan",
+    "district": "Mianwali",
+    "img": ""
+  },
+  {
+    "id": 4,
+    "name": "Smith",
+    "collectedAmount": 400,
+    "status": "Pending",
+    "address": "Mianwali, Punjab, Pakistan",
+    "district": "Mianwali",
+    "img": ""
+  },
+  {
+    "id": 5,
+    "name": "Doe",
+    "collectedAmount": 500,
+    "status": "Active",
+    "address": "Mianwali, Punjab, Pakistan",
+    "district": "Mianwali",
+    "img": ""
+  },
+  {
+    "id": 6,
+    "name": "Smith",
+    "collectedAmount": 600,
+    "status": "Pending",
+    "address": "Mianwali, Punjab, Pakistan",
+    "district": "Mianwali",
+    "img": ""
+  },
+  {
+    "id": 7,
+    "name": "Doe",
+    "collectedAmount": 700,
+    "status": "Active",
+    "address": "Mianwali, Punjab, Pakistan",
+    "district": "Mianwali",
+    "img": ""
+  },
+  {
+    "id": 8,
+    "name": "Smith",
+    "collectedAmount": 800,
+    "status": "Pending",
+    "address": "Mianwali, Punjab, Pakistan",
+    "district": "Mianwali",
+    "img": ""
+  },
+  {
+    "id": 9,
+    "name": "Doe",
+    "collectedAmount": 900,
+    "status": "Active",
+    "address": "Mianwali, Punjab, Pakistan",
+    "district": "Mianwali",
+    "img": ""
+  },
+  {
+    "id": 10,
+    "name": "Smith",
+    "collectedAmount": 1000,
+    "status": "Active",
+    "address": "Mianwali, Punjab, Pakistan",
+    "district": "Mianwali",
+    "img": ""
+  }
+]
