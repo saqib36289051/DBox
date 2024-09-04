@@ -26,12 +26,18 @@ const Setting = (props: Props) => {
 
   return (
     <LayoutContainer>
-      <View className='mt-10 bg-white shadow-sm rounded-lg p-4'>
+      <Pressable
+        onPress={() => onLogout()}
+        className="p-2 flex-col bg-white items-center space-y-1 rounded px-3 mt-2 mx-2 self-end border border-gray-300">
+        <AntDesign name="logout" size={24} color="green" />
+      </Pressable>
+      <Label type='xs' className='text-gray-500 text-right mx-3 mt-1'>Logout</Label>
+      <View className='mt-6 bg-white shadow-sm rounded-lg p-4'>
         <Label type='h6' weight='bold' className='text-center'>User Info</Label>
         <Seprator />
         <View className='flex-row space-x-2 mt-2 items-center'>
           <AntDesign name="user" size={18} color="darkgray" />
-          <Label type='sm' weight='bold' className='text-gray-500'>Name:</Label>
+
           <Label type='sm' className='text-center text-gray-500'>{user?.user_info?.first_name} {user?.user_info?.last_name}</Label>
         </View>
         <Seprator />
@@ -54,12 +60,6 @@ const Setting = (props: Props) => {
         </View>
 
       </View>
-      <Pressable
-        onPress={() => onLogout()}
-        className="w-full p-2 bg-green-200 rounded flex-row justify-between px-3 mt-2">
-        <Label type='p' weight='medium'>Logout</Label>
-        <AntDesign name="logout" size={24} color="green" />
-      </Pressable>
     </LayoutContainer>
   )
 }
