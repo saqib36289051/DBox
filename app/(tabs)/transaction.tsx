@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import LayoutContainer from '@/components/container/LayoutContainer';
 import { View, FlatList, Modal, Platform, StyleSheet, Text, useColorScheme, RefreshControl, Alert, Pressable, ActivityIndicator } from 'react-native';
 import Input from '@/components/ui/Input';
@@ -39,11 +39,10 @@ export default function TransactionScreen() {
     const [bottomLoader, setBottomLoader] = useState(false)
     const [totalCount, setTotalCount] = useState(0)
     const [search, setSearch] = useState('');
-    // const [page, setPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1)
     const { data: initialData, error, isLoading, refetch, isFetching } = useGetTransactionsQuery({
         page: currentPage,
-        page_size: 10,
+        page_size: 20,
         search: search
     })
     const router = useRouter()
@@ -56,20 +55,29 @@ export default function TransactionScreen() {
             } else {
                 setData((prevItems) => [...prevItems, ...initialData.results]);
             }
+            setBottomLoader(false)
             setTotalCount(initialData.count);
         }
     }, [initialData]);
 
 
+    const debouncedSearch = useCallback(
+        _.debounce((searchQuery: string) => handleSearch(searchQuery), 500),
+        []
+    );
 
-    const handleSearch = (searchQuery: string) => {
-        // setPage(1);
-        setSearch(searchQuery);
-        refetch();
+    const handleSearch = (value: string) => {
+        setCurrentPage(1);
+        setSearch(value);
+        refetch()
     };
 
+    function handleChange(e: string) {
+        setSearch(e);
+        debouncedSearch(e);
+    }
+
     const handleReachedEnd = () => {
-        // alert("")
         if (data.length >= totalCount) {
             return;
         } else {
@@ -80,7 +88,6 @@ export default function TransactionScreen() {
             }
         }
     };
-
 
 
     const handlePdfView = async (id: string, name: string, mobile_number: string, amount: number, donation_type: string) => {
@@ -104,6 +111,7 @@ export default function TransactionScreen() {
     };
 
 
+
     return (
         <LayoutContainer>
             <View className='py-1 flex-row gap-2'>
@@ -111,13 +119,12 @@ export default function TransactionScreen() {
                     <Input
                         icon={<Feather name="search" size={24} color={Colors[colorScheme ?? 'light'].icon} />}
                         placeholder='Search for transaction'
-                        onChangeText={(e) => handleSearch(e)}
+                        onChangeText={(e) => handleChange(e)}
                         value={search}
                     />
                 </View>
                 <Button className='bg-green-700 py-1 px-2' iconBtn={<TransactionIcon width={38} height={38} />} onPress={() => router.navigate("/form/addTransaction")} />
             </View>
-            {isFetching || isLoading && <ActivityIndicator className="mt-4" color={"green"} />}
             <FlatList
                 data={data}
                 keyExtractor={(item, index) => item.id.toString()}
@@ -127,20 +134,17 @@ export default function TransactionScreen() {
                 )}
                 ListHeaderComponent={<ListHeader />}
                 ListFooterComponent={
-                    <View className="h-10 flex justify-center items-center mb-4">
-                        {bottomLoader && <ActivityIndicator className="mt-4" color={"green"} />}
-                        {data.length === 0 && !isLoading && !isFetching && (
-                            <Text className="text-center text-green-700 text-xl mt-4">No Transaction Found</Text>
-                        )}
+                    <View className='h-10 flex justify-center'>
+                        {bottomLoader && <ActivityIndicator color={Colors[colorScheme ?? 'light'].tint} />}
                     </View>
                 }
                 onEndReached={handleReachedEnd}
-                onEndReachedThreshold={0.7} // Adjust the threshold
-                scrollEventThrottle={16} // Add this prop
-                refreshControl={
-                    <RefreshControl refreshing={isFetching} onRefresh={refetch} />
-                }
-                initialNumToRender={10} // Adjust this if needed
+                // onEndReachedThreshold={0.7} // Adjust the threshold
+                // scrollEventThrottle={16} // Add this prop
+                // refreshControl={
+                //     <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+                // }
+                initialNumToRender={20} // Adjust this if needed
             />
 
         </LayoutContainer>
