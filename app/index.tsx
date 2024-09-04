@@ -1,8 +1,6 @@
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../store'
-import * as SecureStore from 'expo-secure-store';
+import { useDispatch, useSelector } from 'react-redux'
 import Label from '@/components/ui/Label';
 import Input from '@/components/ui/Input';
 import { useNavigation, useRouter } from 'expo-router';
@@ -14,7 +12,7 @@ import { storeData } from '@/utils/utils';
 type Props = {}
 
 const Login = (props: Props) => {
-  const { value } = useSelector((state: RootState) => state.user)
+  const dispatch = useDispatch()
   const [login, { isLoading, isError, error, reset }] = useLoginMutation()
   const router = useRouter()
   const [userId, setUserId] = React.useState('')
@@ -36,9 +34,12 @@ const Login = (props: Props) => {
         setErrors({ userId: "", password: 'Invalid User ID or Password' })
         return
       }
+      dispatch({
+        type: 'user/setUser',
+        payload: response?.data
+      })
       storeData('userInfo', response?.data)
-      router.navigate('/(tabs)')
-
+      router.navigate('/tabs')
     } catch (error) {
       console.log(error)
     }

@@ -121,7 +121,7 @@ const DashboardScreen = (props: Props) => {
             <View className='flex-row justify-between mb-1'>
               <Label type='sm' weight='bold'>Recent Transactions</Label>
               <Pressable
-                onPress={() => router.navigate("/(tabs)/transaction")}
+                onPress={() => router.navigate("/tabs/transaction")}
                 className='flex-row gap-x-2 items-center mr-4'>
                 <Label type='sm' weight='bold'>See All</Label>
                 <FontAwesome6 name="arrow-right-long" size={16} color="green" />
