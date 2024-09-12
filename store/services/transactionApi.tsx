@@ -44,12 +44,13 @@ export const transactionApi = createApi({
                 responseHandler: (response) => response.blob(),
             }),
         }),
-        getReportData: builder.query({
-            query: () => ({
+        getReportData: builder.mutation({
+            query: (params) => ({
                 url: '/report-transaction-data/',
-                method: 'GET'
+                method: 'GET',
+                params: params
             }),
-            providesTags: ["Transaction"]
+            invalidatesTags: ["Transaction"]
         }),
         updateBoxStatus: builder.query({
             query: () => ({
@@ -67,6 +68,6 @@ export const {
     useGetTransactionTotalsQuery,
     useGetTransactionGraphDataQuery,
     useGetDownloadReportMutation,
-    useGetReportDataQuery,
+    useGetReportDataMutation,
     useUpdateBoxStatusQuery
 } = transactionApi;
