@@ -12,8 +12,8 @@ const BoxMap = (props: Props) => {
                 longitude: 70.36768661811948,
                 latitude: 31.598928191991682,
             },
-            title: 'DBox',
-            description: 'DBox'
+            title: 'Testing Box',
+            description: 'Testing Box Deployed'
         }
     ]
     return (
@@ -29,9 +29,9 @@ const BoxMap = (props: Props) => {
                 showsUserLocation={true}
             >
                 {
-                    dataMarkers.map((marker) => (
+                    dataMarkers.map((marker, index) => (
                         <Marker
-                            key={marker.title}
+                            key={index}
                             coordinate={marker.coordinate}
                             title={marker.title}
                             description={marker.description}
