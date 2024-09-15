@@ -37,16 +37,38 @@ const BoxTransaction = (props: Props) => {
         amount: "",
     })
 
+    const formattedDate = new Date().toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    });
+
+    const formattedTime = new Date().toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+    });
+
+    const dateAndTime = `${formattedDate} ${formattedTime}`
+
     const text =
-        "[C]<u><font size='big'>JAMIA NIZAM-E-MUSTAFA</font></u>\n" +
-        "[L]\n" +
-        `[L]<b>NAME:</b>[R]${state.name}\n` +
-        `[L]<b>MOBILE:</b>[R]${state.mobile_number}\n` +
-        `[L]<b>Donation:</b>[R]${state.amount}\n` +
-        `[L]<b>Collection Mode:</b>[R]${state.donation_type}\n` +
-        "[L]\n" +
-        `[L]<b><u>Jamia Niazame Mustafa</u></b> will use your funds wherever it deems fit for religious and charitable purposes.\n` +
-        "[C]<qrcode size='20'>JAMIA NIZAM-E-MUSTAFA</qrcode>";
+        "[C]-------------------------------[C]\n" +
+        "[C]<b><font size='normal'>JAMIA NIZAM-E-MUSTAFA</font></b>\n" +
+        "[C]<b><font size='normal'>(Registered)</font></b>\n" +
+        "[C]<font size='normal'>Thatthi Daudkhel</font>\n" +
+        "[C]<font size='normal'>Tehsil & Disst: Mianwali</font>\n" +
+        "[C]<font size='normal'>0306-8642243</font>\n" +
+        "[C]<font size='normal'>Email: info@nizamemustafa.com</font>\n" +
+        "[C]-------------------------------[C]\n" +
+        `[R]${dateAndTime}\n` +
+        `[L]<b>NAME:</b>  [C]${state?.name}[C]\n` +
+        `[L]<b>MOBILE:</b>[R]${state?.mobile_number}\n` +
+        `[L]<b>Donation:</b>[R]${state?.amount}\n` +
+        `[L]<b>Collection Mode:</b>[R]${state?.donation_type}\n` +
+        "[C]-------------------------------[C]\n" +
+        `[L]<b><u>Mufti M Junaid Raza Khan Qadri</u></b>[L]\n` +
+        `[C]<b>Contact: 0307-5674646</b>[C]\n` +
+        `[L]Aap k channdy ko kisi bhi jaiz, deeni, islahi, rohani aur bhalai k kam mein kharch kia jaye ga[L]`
 
     const validation = () => {
         let error = {
