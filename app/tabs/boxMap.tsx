@@ -1,4 +1,3 @@
-import { Feather } from '@expo/vector-icons'
 import React from 'react'
 import { View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'

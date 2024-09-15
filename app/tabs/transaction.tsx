@@ -90,23 +90,44 @@ export default function TransactionScreen() {
     };
 
 
-    const handlePdfView = async (id: string, name: string, mobile_number: string, amount: number, donation_type: string) => {
+    const handlePdfView = async (id: string, name: string, mobile_number: string, amount: number, donation_type: string, created_at: string) => {
+        // current data and time like this 09-15-2024 11:48 PM
+        // 2024-08-31T17:30:12.262566Z
+
+        const formattedDate = new Date(created_at).toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        });
+
+        const formattedTime = new Date(created_at).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+        });
+
+        const dateAndTime = `${formattedDate} ${formattedTime}`
+
+
         const text =
             "[C]-------------------------------[C]\n" +
             "[C]<b><font size='normal'>JAMIA NIZAM-E-MUSTAFA</font></b>\n" +
             "[C]<b><font size='normal'>(Registered)</font></b>\n" +
-            "[C]<font size='normal'>Thatthi Daudkhel, Tehsil & Disst: Mianwali</font>\n" +
+            "[C]<font size='normal'>Thatthi Daudkhel</font>\n" +
+            "[C]<font size='normal'>Tehsil & Disst: Mianwali</font>\n" +
             "[C]<font size='normal'>0306-8642243</font>\n" +
             "[C]<font size='normal'>Email: info@nizamemustafa.com</font>\n" +
+            "[C]<font size='normal'>www.nizamemustafa.com</font>\n" +
             "[C]-------------------------------[C]\n" +
-            `[L]<b>NAME:</b>[R]${name}\n` +
+            `[R]${dateAndTime}\n` +
+            `[L]<b>NAME:</b>  [C]${name}[C]\n` +
             `[L]<b>MOBILE:</b>[R]${mobile_number}\n` +
             `[L]<b>Donation:</b>[R]${amount}\n` +
             `[L]<b>Collection Mode:</b>[R]${donation_type}\n` +
             "[C]-------------------------------[C]\n" +
-            `[L]<b><u>Mufti M Junaind Raza Khan Qadri</u></b>[L]\n` +
-            `[L]Aap k channdy ko kisi bhi jaiz, deeni, islahi, rohani aur bhalai k kam mein kharch kia jaye ga[L]\n` +
-            `<qrcode size='20'>JAMIA NIZAM-E-MUSTAFA</qrcode>`
+            `[L]<b><u>Mufti M Junaid Raza Khan Qadri</u></b>[L]\n` +
+            `[C]<b>Contact: 0307-5674646</b>[C]\n` +
+            `[L]Aap k channdy ko kisi bhi jaiz, deeni, islahi, rohani aur bhalai k kam mein kharch kia jaye ga[L]`
         await printReceipt(text)
     };
 
