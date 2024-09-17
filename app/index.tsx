@@ -83,7 +83,7 @@ const Login = (props: Props) => {
             label={<Label className="text-gray-600 font-medium mb-1">Phone Number</Label>}
             onChangeText={v => setUserId(v)}
             value={userId}
-            placeholder="User ID"
+            placeholder="Phone Number"
           />
           {errors.userId && <Label type='xs' className="text-red-500">{errors.userId}</Label>}
         </View>
