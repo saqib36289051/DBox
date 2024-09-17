@@ -9,7 +9,7 @@ export const mapApi = createApi({
     endpoints: (builder) => ({
         mapBoxList: builder.query({
             query: () => ({
-                url: '/boxes/maps/a',
+                url: '/boxes/maps/',
                 method: 'GET',
             }),
             providesTags: ['Map'],

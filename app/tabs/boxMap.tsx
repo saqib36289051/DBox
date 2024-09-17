@@ -1,7 +1,7 @@
 import Label from '@/components/ui/Label'
 import { MapMarkerType } from '@/constants/Types'
 import { useMapBoxListQuery } from '@/store/services/mapApi'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 
@@ -9,6 +9,11 @@ import MapView, { Marker } from 'react-native-maps'
 
 const BoxMap = () => {
     const { data, isLoading } = useMapBoxListQuery({})
+    const filterRecords = useCallback(() => {
+        if (data && data?.results) {
+            return data?.results.filter((item: MapMarkerType) => item?.coordinate?.latitude && item?.coordinate?.longitude)
+        }
+    }, [data])
     return (
         <View className="flex-1">
             {
@@ -28,18 +33,21 @@ const BoxMap = () => {
                 showsUserLocation={true}
             >
                 {
-                    data?.results?.map((marker: MapMarkerType) => (
-                        <Marker
-                            key={marker?.id}
-                            coordinate={{
-                                latitude: parseFloat(marker?.coordinate?.latitude),
-                                longitude: parseFloat(marker?.coordinate?.longitude),
-                            }}
-                            title={marker?.name}
-                            description={marker?.complete_address}
-                            icon={require("@/assets/images/box.png")}
-                        />
-                    ))
+                    filterRecords()?.map((marker: MapMarkerType) => {
+                        return (
+                            <Marker
+                                key={marker?.id}
+                                coordinate={{
+                                    latitude: parseFloat(marker?.coordinate?.latitude),
+                                    longitude: parseFloat(marker?.coordinate?.longitude),
+                                }}
+                                title={marker?.name}
+                                description={marker?.complete_address}
+                                icon={require("@/assets/images/box.png")}
+                            />
+                        )
+                    }
+                    )
                 }
             </MapView>
         </View>
