@@ -6,7 +6,7 @@ import Label from './Label'
 
 type Props = {
     data: GenderListType[],
-    onCheckChange: (data: GenderListType[]) => void
+    onCheckChange: (data: GenderListType[]) => void,
 }
 
 const CheckboxGroup = (props: Props) => {
@@ -42,7 +42,7 @@ const CheckboxGroup = (props: Props) => {
                                 }}
                                 onPress={(isChecked) => handleCheckboxPress(isChecked, item.id)}
                             />
-                            <Label className='text-gray-700'>{item.text}</Label>
+                            <Label className='text-gray-700'>{item.label}</Label>
                         </View>
                     )
                 })

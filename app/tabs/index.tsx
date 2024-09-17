@@ -12,9 +12,8 @@ import TopBar from '@/components/ui/TopBar'
 type Props = {}
 
 const DashboardScreen = (props: Props) => {
-  const { data, isSuccess, isLoading, refetch, isFetching } = useGetTransactionTotalsQuery({})
+  const { data, isLoading, refetch } = useGetTransactionTotalsQuery({})
   const { data: graph = {}, isLoading: isLoadingGraph, refetch: graphDataRefetch } = useGetTransactionGraphDataQuery({})
-  const [getDownloadReport, { isLoading: isDownloading }] = useGetDownloadReportMutation();
   const { data: transactionList = {}, refetch: transactionListLatest } = useGetTransactionsQuery({})
   const { data: message } = useUpdateBoxStatusQuery({})
   const { width, height } = useWindowDimensions()
@@ -89,6 +88,30 @@ const DashboardScreen = (props: Props) => {
                 <Label type='xs' weight='regular' >Add New Transaction</Label>
               </Pressable>
             </View>
+          </View>
+          <View className="flex-row gap-2 gap-x-2  w-full mt-[0.5]">
+            <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
+              <View className='flex-row  gap-x-3 items-center'>
+                <Feather name="box" size={16} color="rgb(3 105 161)" />
+                <Label type='sm' weight='bold' className='text-sky-700' >{data?.total_box_count}</Label>
+              </View>
+              <Label type='xs' weight='medium' className='text-sky-700' >Total Box</Label>
+            </View>
+            <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
+              <View className='flex-row  gap-x-3 items-center'>
+                <Feather name="box" size={16} color="green" />
+                <Label type='sm' weight='bold' >{data?.open_box_count}</Label>
+              </View>
+              <Label type='xs' weight='medium' >Open Box</Label>
+            </View>
+            <View className='flex-1 rounded bg-white shadow-sm p-2 gap-y-1'>
+              <View className='flex-row  gap-x-3 items-center'>
+                <Feather name="box" size={16} color="rgb(185 28 28)" />
+                <Label type='sm' weight='bold' className='text-red-700' >{data?.pending_box_count}</Label>
+              </View>
+              <Label type='xs' weight='medium' className='text-red-700' >Pending Box</Label>
+            </View>
+
           </View>
           <View
             style={{ width: width - 32 }}

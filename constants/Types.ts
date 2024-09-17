@@ -9,6 +9,8 @@ export type DonationList = {
   province: string;
   gender: string;
   area: string;
+  latitude: string | null;
+  longitude: string | null;
 };
 
 export type DonationTransactinList = {
@@ -24,12 +26,15 @@ export type DonationTransactinList = {
   province: string;
   gender: string;
   area: string;
+  latitude: string | null;
+  longitude: string | null;
 };
 
 export type GenderListType = {
   id: number;
   text: string;
   isChecked: boolean;
+  label: string;
 };
 
 export type TransactionListType = {
@@ -65,16 +70,6 @@ export type MonthlyReportListType = {
   amount: number;
 };
 
-//box Edit Props Type
-// mobile_number: string;
-// name: string;
-// province: string;
-// city: string;
-// area: string;
-// complete_address: string;
-// gender: GenderListType[];
-// image: string | null;
-
 export type BoxEditPropsType = {
   id: string;
   mobile_number: string;
@@ -85,4 +80,16 @@ export type BoxEditPropsType = {
   complete_address: string;
   gender: string;
   image: string;
+  latitude: string;
+  longitude: string;
+};
+
+export type MapMarkerType = {
+  id: string;
+  name: string;
+  complete_address: string;
+  coordinate: {
+    latitude: string;
+    longitude: string;
+  };
 };

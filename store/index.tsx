@@ -4,6 +4,7 @@ import userReducer from './slices/userSlice';
 import { authApi } from './services/authApi';
 import { transactionApi } from './services/transactionApi';
 import { boxApi } from './services/boxApi';
+import { mapApi } from './services/mapApi';
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
         [authApi.reducerPath]: authApi.reducer,
         [transactionApi.reducerPath]: transactionApi.reducer,
         [boxApi.reducerPath]: boxApi.reducer,
+        [mapApi.reducerPath]: mapApi.reducer,
     },
 
 
@@ -19,6 +21,7 @@ export const store = configureStore({
             authApi.middleware,
             transactionApi.middleware,
             boxApi.middleware,
+            mapApi.middleware,
         ]),
 });
 

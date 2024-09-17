@@ -1,4 +1,4 @@
-import { Image, Pressable, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import LayoutContainer from '@/components/container/LayoutContainer'
 import * as ImagePicker from 'expo-image-picker';
@@ -16,6 +16,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import BottomSheetModalReusable from '@/components/ui/BottomSheet';
 import { Entypo, Ionicons } from '@expo/vector-icons';
+import { useLocationHook } from '@/hooks/useLocationHook';
 const defaultParams = {
   id: null,
   mobile_number: '',
@@ -26,6 +27,8 @@ const defaultParams = {
   complete_address: '',
   gender: '',
   image: null,
+  longitude: null,
+  latitude: null,
 };
 
 type State = {
@@ -37,29 +40,33 @@ type State = {
   complete_address: string;
   gender: GenderListType[]
   image: string | null;
+  longitude: string | null;
+  latitude: string | null;
 }
 
 type Action = Partial<State>;
 
 const initValues = [{
   id: 1,
-  text: "Male",
+  text: "male",
   isChecked: false,
+  label: "Male",
 },
 {
   id: 2,
-  text: "Female",
+  text: "female",
   isChecked: false,
+  label: "Female",
 }]
 
 const AddBox = () => {
   const params = { ...defaultParams, ...useLocalSearchParams<BoxEditPropsType>() }
-  console.log("🚀 ~ AddBox ~ params:", params)
   const isEdit = params?.id ? true : false
   const colorScheme = useColorScheme();
   const router = useRouter()
   const [box, { isLoading, isError, error }] = useBoxMutation()
   const [updateBox, { isLoading: isUpdateLoading, isError: isUpdateError, error: updateError }] = useUpdateBoxMutation()
+  const { latitude: newLatitude, longitude: newLongitude, fetchLocation } = useLocationHook()
   const [errors, setErrors] = useState<any>({})
   const [state, dispatch] = useReducer((state: State, action: Action) => {
     return { ...state, ...action }
@@ -71,7 +78,9 @@ const AddBox = () => {
     area: params?.area || '',
     complete_address: params?.complete_address || '',
     gender: isEdit ? getGenderVals() : initValues,
-    image: params?.image || null
+    image: params?.image || null,
+    longitude: isEdit ? params?.longitude : newLongitude.toString() || null,
+    latitude: isEdit ? params?.latitude : newLatitude.toString() || null,
   })
 
 
@@ -150,13 +159,17 @@ const AddBox = () => {
       });
     }
 
+    if (state.longitude && state.latitude) {
+      formData.append("latitude", state?.latitude?.toString())
+      formData.append("longitude", state?.longitude?.toString())
+    }
+
     try {
       const res = await updateBox({
         id: params?.id,
         formData,
       })
       if (res?.error) {
-        console.log("🚀 ~ iUpdateBox ~ res?.error:", res?.error)
         ToastAndroid.show(`${res?.error?.data}`, ToastAndroid.SHORT)
         // Object.entries(res?.error?.data)?.map(([key, value]) => {
         // })
@@ -258,6 +271,19 @@ const AddBox = () => {
     }
   };
 
+  function updateLocation() {
+    if (!newLatitude || !newLongitude) {
+      Alert.alert(
+        "Error",
+        "Please Enable Location Permission to get your location",
+        [{ text: "OK", onPress: () => fetchLocation() }, { text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel" }],
+      )
+      return
+    }
+
+    dispatch({ latitude: newLatitude, longitude: newLongitude });
+  }
+
   return (
     <View className="flex-1">
       <LayoutContainer>
@@ -292,6 +318,22 @@ const AddBox = () => {
               </TouchableOpacity>
             )
 
+            }
+          </View>
+          <View className='flex items-end'>
+            {
+              state?.latitude && state?.longitude ?
+                <View className='bg-green-500 flex-row items-center px-2 py-1 rounded-full'>
+                  <Ionicons name="location" size={22} color="#fff" />
+                  <Label type='xs' className='text-white'>Location Done</Label>
+                </View>
+                :
+                <Pressable
+                  onPress={updateLocation}
+                  className='bg-white border border-red-300 flex-row items-center px-2 py-1 rounded-full'>
+                  <Ionicons name="location" size={22} color="red" />
+                  <Label type='xs' className='text-red-500'>Location Pending</Label>
+                </Pressable>
             }
           </View>
           <View>

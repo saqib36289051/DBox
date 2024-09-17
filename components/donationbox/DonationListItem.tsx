@@ -3,7 +3,7 @@ import React from 'react'
 import Label from '@/components/ui/Label';
 import { getFirstLetters } from '@/utils/utils';
 import Badge from '@/components/ui/Badge';
-import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { DonationList } from '@/constants/Types';
 
@@ -19,20 +19,50 @@ const DonationListItem: React.FC<Props> = ({
     area,
     image,
     province,
-    gender
+    gender,
+    latitude,
+    longitude
 }) => {
     return (
         <Pressable
-            onLongPress={() => router.navigate(`/form/addBox?id=${id}&name=${name}&mobile_number=${mobile_number}&city=${city}&complete_address=${complete_address}&city=${city}&image=${image}&province=${province}&gender=${gender}&area=${area}`)}
-            onPress={() => router.navigate(`/form/boxTransaction?id=${id}&name=${name}&mobile_number=${mobile_number}&city=${city}&complete_address=${complete_address}`)}
+            onPress={() => router.navigate({
+                pathname: "/form/boxTransaction",
+                params: {
+                    id,
+                    name,
+                    mobile_number,
+                    city,
+                    complete_address,
+                }
+            })}
             style={({ pressed }) => [
                 {
                     backgroundColor: pressed ? "#e0f2fe" : "#fff",
+                    position: 'relative'
                 },
                 styles.card
             ]
             }
             key={id} >
+            <Pressable
+                onPress={() => router.navigate({
+                    pathname: "/form/addBox", params: {
+                        id,
+                        name,
+                        mobile_number,
+                        city,
+                        complete_address,
+                        image,
+                        province,
+                        gender,
+                        area,
+                        latitude,
+                        longitude
+                    }
+                })}
+                className='absolute top-1 right-1 p-2 rounded-full z-50'>
+                <MaterialCommunityIcons name="circle-edit-outline" size={24} color="green" />
+            </Pressable>
             <View>
                 {image ?
                     <Image
